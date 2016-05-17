@@ -3,3 +3,12 @@
 The time-tracker primarily for software development.
 
 Main feature is tight integration with project management system Trello.
+
+### Project structure 
+- The `app` directory contains meteor app
+- The `chrome` directory contains the chrome extension
+
+
+### Start Meteor application
+
+Under `timlio-com/app` run `./run.sh`
