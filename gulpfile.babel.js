@@ -16,7 +16,7 @@ gulp.task('webpack:dev', (callback) => {
 });
 
 gulp.task('views:dev', () => {
-  gulp.src('./chrome/views/*.html')
+  gulp.src('./chrome/**/*.html')
     .pipe(gulp.dest('./dev'));
 });
 
