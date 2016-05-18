@@ -1,9 +1,14 @@
 import path from 'path';
 import webpack from 'webpack';
 
+const extensionPath = path.join(__dirname, '../chrome/extension');
+
 const baseDevConfig = () => ({
   devtool: 'eval-cheap-module-source-map',
   //TODO: configure entry
+  entry: {
+    content: `${extensionPath}/content/content.js`
+  },
   output: {
     path: path.join(__dirname, '../dev/js'),
     filename: '[name].bundle.js',
@@ -32,7 +37,7 @@ const baseDevConfig = () => ({
         test: /\.css$/,
         loaders: [
           'style',
-          'css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'css?sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
           'postcss'
       ]
     }]

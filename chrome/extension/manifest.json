@@ -9,7 +9,14 @@
     "default_icon": "icons/icon.png",
     "default_popup": "views/popup.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://trello.com/b/*/*"],
+      "js": ["js/content.bundle.js"]
+    }
+  ],
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "https://trello.com/b/*/*"
   ]
 }

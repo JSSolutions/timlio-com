@@ -16,6 +16,8 @@
   "homepage": "https://bitbucket.org/striletskyy/timlio-com#readme",
   "dependencies": {
     "asteroid": "^2.0.2",
+    "classnames": "^2.2.5",
+    "jquery": "^2.2.3",
     "lodash": "^4.12.0",
     "react": "^15.0.2",
     "react-chrome-redux": "0.0.7",
