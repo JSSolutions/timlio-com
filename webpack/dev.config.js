@@ -4,10 +4,10 @@ import webpack from 'webpack';
 const extensionPath = path.join(__dirname, '../chrome/extension');
 
 const baseDevConfig = () => ({
-  devtool: 'eval-cheap-module-source-map',
-  //TODO: configure entry
+  devtool: 'inline-source-map',
   entry: {
-    content: `${extensionPath}/content/content.js`
+    content: `${extensionPath}/content/content.js`,
+    background: `${extensionPath}/background/background.js`
   },
   output: {
     path: path.join(__dirname, '../dev/js'),

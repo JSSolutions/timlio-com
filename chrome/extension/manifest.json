@@ -4,7 +4,12 @@
   "name": "Timlio extension",
   "description": "This extension provide tight integration with project management system Trello",
   "version": "1.0",
-
+  "background": {
+    "scripts": [
+      "js/background.bundle.js"
+    ],
+    "persistent": true
+  },
   "browser_action": {
     "default_icon": "icons/icon.png",
     "default_popup": "views/popup.html"
@@ -16,7 +21,9 @@
     }
   ],
   "permissions": [
-    "activeTab",
     "https://trello.com/b/*/*"
+  ],
+  "web_accessible_resources": [
+    "icons/icon.png"
   ]
 }
