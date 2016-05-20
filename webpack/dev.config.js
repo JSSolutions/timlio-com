@@ -1,13 +1,14 @@
 import path from 'path';
 import webpack from 'webpack';
 
-const extensionPath = path.join(__dirname, '../chrome/extension');
+const extensionPath = path.join(__dirname, '../chrome/extension/');
 
 const baseDevConfig = () => ({
   devtool: 'inline-source-map',
   entry: {
-    content: `${extensionPath}/content/content.js`,
-    background: `${extensionPath}/background/background.js`
+    content: `${extensionPath}content/content.js`,
+    background: `${extensionPath}background/background.js`,
+    popup: `${extensionPath}popup/popup.js`
   },
   output: {
     path: path.join(__dirname, '../dev/js'),

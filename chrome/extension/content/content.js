@@ -5,6 +5,7 @@ import { Store } from 'react-chrome-redux';
 import $ from 'jquery';
 import Timer from '../../app/containers/Timer';
 import TimerButton from '../../app/containers/TimerButton';
+import './content.css';
 
 const store = new Store({
   portName: 'timlio'
@@ -39,8 +40,11 @@ const renderTimerButton = () => {
 };
 
 window.addEventListener('load', () => {
-  renderTimer();
-  renderTimerButton();
+  const unsubcribe = store.subscribe(() => {
+    unsubcribe();
+    renderTimer();
+    renderTimerButton();
+  });
   
   const target = document.querySelector('body');
   const config = { attributes: true, childList: true, subtree: true, characterData: true };

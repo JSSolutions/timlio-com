@@ -16,12 +16,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://trello.com/b/*/*"],
+      "matches": ["https://trello.com/b/*"],
       "js": ["js/content.bundle.js"]
     }
   ],
   "permissions": [
-    "https://trello.com/b/*/*"
+    "tabs"
   ],
   "web_accessible_resources": [
     "icons/icon.png"

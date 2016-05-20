@@ -1,31 +1,30 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
-import './Timer.css';
+
+const digitize = (value) => {
+  let str = value.toString();
+
+  if(str.length == 1) {
+    str = `0${str}`;
+  }
+  return str;
+};
 
 export default class Timer extends Component {
-  // static propTypes = {
-  //   timer: PropTypes.object.isRequired
-  // };
-  
-  digitize(value) {
-    value = value.toString();
-
-    if(value.length == 1) {
-      value = `0${value}`;
-    }
-    return value;
-  }
+  static propTypes = {
+    timer: PropTypes.object.isRequired
+  };
   renderTime() {
     const { timer = {} } = this.props;
     const { seconds = 0, minutes = 0, hours = 0 } = timer;
     return(
-      <span>{this.digitize(hours)}:{this.digitize(minutes)}:{this.digitize(seconds)}</span>
+      <span>{digitize(hours)}:{digitize(minutes)}:{digitize(seconds)}</span>
     )
   }
   render() {
     return (
       <div className={classnames({ 'header-timer': true })}>
-        <span>{this.renderTime()}</span>
+        {this.renderTime()}
       </div>
     )
   }

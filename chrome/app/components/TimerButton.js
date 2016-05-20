@@ -1,14 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { dispatchToggleTimer } from '../actions/mockActions';
-import './TimerButton.css';
-
 
 const logoUrl = chrome.extension.getURL('icons/icon.png');
 
 export default class TimerButton extends Component {
-  // static propTypes = {
-  //   dispatch: PropTypes.func.isRequired
-  // };
+  static propTypes = {
+    dispatch: PropTypes.func.isRequired
+  };
 
   componentDidMount() {
     const target = this.refs.timerIcon;
