@@ -6,13 +6,15 @@ export function toggleTimer({ payload }) {
     const { activeTimer } = state;
     let { timerId = null, card: activeCard = { id: '' } } = activeTimer;
     const card = payload;
-    
-    clearInterval(timerId);
-    
-    if (card.id !== activeCard.id) {
+
+    if (card.id !== activeCard.id || !timerId) {
+      clearInterval(timerId);
       timerId = setInterval(() => {
-        dispatch({type: ActionTypes.UPDATE_TIMER})
+        dispatch({ type: ActionTypes.UPDATE_TIMER })
       }, 1000);
+    } else {
+      clearInterval(timerId);
+      timerId = null;
     }
     
     dispatch({ type: ActionTypes.TOGGLE_TIMER, timerId, card })
