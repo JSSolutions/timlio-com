@@ -6,3 +6,10 @@ export function dispatchToggleTimer(payload) {
     payload
   }
 }
+
+export function dispatchGetCard(payload) {
+  return {
+    type: ActionTypes.DISPATCH_GET_CARD,
+    payload
+  }
+}

@@ -5,24 +5,9 @@ import { Store } from 'react-chrome-redux';
 import Timer from '../../app/containers/Timer';
 import TimerButton from '../../app/containers/TimerButton';
 import './content.css';
-import { APP_KEY } from '../../app/config';
-import '../../app/lib/trello-client';
+import { trelloAuth } from '../../app/util/trello';
 
-Trello.setKey(APP_KEY);
-Trello.authorize(
-  {
-    name: "Trello Helper Extension",
-    type: "redirect",
-    expiration: "never",
-    interactive: true,
-    scope: {read: true, write: false},
-    success: function () {
-      console.log('success');
-    },
-    error: function () {
-      console.log('error');
-    }
-  });
+trelloAuth();
 
 const store = new Store({
   portName: 'timlio'

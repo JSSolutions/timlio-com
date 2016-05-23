@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { dispatchToggleTimer } from '../actions/mockActions';
+import { dispatchToggleTimer, dispatchGetCard } from '../actions/mockActions';
 
 const logoUrl = chrome.extension.getURL('icons/icon.png');
 
@@ -22,9 +22,7 @@ export default class TimerButton extends Component {
   onClick(e) {
     e.stopPropagation();
     const { dispatch } = this.props;
-    Trello.rest('GET', `cards/${this.cardId}`, {}, (data) => {
-      dispatch(dispatchToggleTimer(data));
-    });
+    dispatch(dispatchGetCard({ cardId: this.cardId, dispatchCb: dispatchToggleTimer }));
   }
   render() {
     return (

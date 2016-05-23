@@ -1,4 +1,3 @@
-
 export const digitize = (value) => {
   let str = value.toString();
 
@@ -10,7 +9,7 @@ export const digitize = (value) => {
 
 export const getMinutes = (time) => {
   const minutes = time / 60;
-  return Math.floor(minutes);
+  return Math.floor(minutes) % 60;
 };
 
 export const getHours = (time) => {
