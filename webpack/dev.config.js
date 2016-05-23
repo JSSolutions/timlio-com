@@ -23,6 +23,10 @@ const baseDevConfig = () => ({
       'process.env': {
         NODE_ENV: JSON.stringify('development')
       }
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
     })
   ],
   resolve: {

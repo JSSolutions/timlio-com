@@ -1,24 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
-
-const digitize = (value) => {
-  let str = value.toString();
-
-  if(str.length == 1) {
-    str = `0${str}`;
-  }
-  return str;
-};
+import { digitize, getHours, getMinutes, getSeconds } from '../util/time';
 
 export default class Timer extends Component {
   static propTypes = {
-    timer: PropTypes.object.isRequired
+    card: PropTypes.object,
+    time: PropTypes.number
   };
   renderTime() {
-    const { timer = {} } = this.props;
-    const { seconds = 0, minutes = 0, hours = 0 } = timer;
+    const { time, card = { name: '' } } = this.props;
+    const minutes = getMinutes(time);
+    const hours = getHours(time);
+    const seconds = getSeconds(time);
     return(
-      <span>{digitize(hours)}:{digitize(minutes)}:{digitize(seconds)}</span>
+      <span>{card.name} {digitize(hours)}:{digitize(minutes)}:{digitize(seconds)}</span>
     )
   }
   render() {

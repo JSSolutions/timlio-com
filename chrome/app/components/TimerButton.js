@@ -11,6 +11,9 @@ export default class TimerButton extends Component {
   componentDidMount() {
     const target = this.refs.timerIcon;
     target.addEventListener('click', this.onClick.bind(this), false);
+
+    const $cardName = $(target).parents('.list-card').find('.js-card-name');
+    this.cardId = $cardName.attr('href').split('/')[2];
   }
   componentWillUnmount() {
     const target = this.refs.timerIcon;
@@ -19,7 +22,9 @@ export default class TimerButton extends Component {
   onClick(e) {
     e.stopPropagation();
     const { dispatch } = this.props;
-    dispatch(dispatchToggleTimer());
+    Trello.rest('GET', `cards/${this.cardId}`, {}, (data) => {
+      dispatch(dispatchToggleTimer(data));
+    });
   }
   render() {
     return (

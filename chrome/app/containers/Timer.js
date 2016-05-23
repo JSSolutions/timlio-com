@@ -2,8 +2,12 @@ import { connect } from 'react-redux';
 import Timer from '../components/Timer';
 
 const mapStateToProps = (state) => {
+  const { activeTimer, timers } = state;
+  const { card = null } = activeTimer;
+
   return {
-    timer: state.timer
+    card: activeTimer.card,
+    time: card ? timers[card.id] : 0
   }
 };
 

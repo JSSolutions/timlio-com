@@ -1,6 +1,3 @@
-import { combineReducers } from 'redux';
-import timer from './timer';
+import timers from './timers';
 
-export default combineReducers({
-  timer
-});
+export default timers;

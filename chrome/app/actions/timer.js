@@ -1,17 +1,21 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
-export function toggleTimer() {
+export function toggleTimer({ payload }) {
   return (dispatch, getState) => {
-    let { timerId } = getState().timer;
-    if (timerId === null) {
+    const state = getState();
+    const { activeTimer } = state;
+    let { timerId = null, card: activeCard = { id: '' } } = activeTimer;
+    const card = payload;
+    
+    clearInterval(timerId);
+    
+    if (card.id !== activeCard.id) {
       timerId = setInterval(() => {
-        dispatch({ type: ActionTypes.UPDATE_TIMER, payload: {} })
+        dispatch({type: ActionTypes.UPDATE_TIMER})
       }, 1000);
-    } else {
-      clearInterval(timerId);
-      timerId = null;
     }
-    dispatch({ type: ActionTypes.TOGGLE_TIMER, payload: timerId })
+    
+    dispatch({ type: ActionTypes.TOGGLE_TIMER, timerId, card })
   }
 }
 
