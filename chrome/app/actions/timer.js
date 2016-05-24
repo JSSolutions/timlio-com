@@ -1,23 +1,43 @@
 import * as ActionTypes from '../constants/ActionTypes';
+import { getCard } from '../util/trello';
 
-export function toggleTimer({ payload }) {
+export function updateTimer(payload) {
+  return {
+    type: ActionTypes.UPDATE_TIMER,
+    payload
+  }
+}
+
+export function toggleTimer(payload) {
+  return {
+    type: ActionTypes.TOGGLE_TIMER,
+    payload
+  }
+}
+
+
+export function actionTimer({ payload }) {
   return (dispatch, getState) => {
-    const state = getState();
-    const { activeTimer } = state;
+    const { activeTimer } = getState();
     let { timerId = null, card: activeCard = { id: '' } } = activeTimer;
-    const card = payload;
+    const { cardId } = payload;
 
     clearInterval(timerId);
     
-    if (card.id !== activeCard.id || !timerId) {
-      timerId = setInterval(() => {
-        dispatch({ type: ActionTypes.UPDATE_TIMER })
-      }, 1000);
-    } else {
-      timerId = null;
-    }
+    getCard(cardId)
+      .then((card) => {
+        if (card.id !== activeCard.id || !timerId) {
+          timerId = setInterval(() => dispatch(updateTimer({ cardId: card.id })), 1000);
+        } else {
+          timerId = null;
+        }
+        
+        dispatch(toggleTimer({ timerId, card }));
+      });
     
-    dispatch({ type: ActionTypes.TOGGLE_TIMER, timerId, card })
+
+    
+    return Promise.resolve({});
   }
 }
 

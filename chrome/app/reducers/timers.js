@@ -19,7 +19,7 @@ const initialState = {
 function timer(state = {}, action) {
   switch (action.type) {
     case ActionTypes.TOGGLE_TIMER:
-      const { timerId, card } = action;
+      const { timerId, card } = action.payload;
 
       return Object.assign({}, state, {
         timerId,
@@ -35,8 +35,8 @@ function timer(state = {}, action) {
 export default function timers(state = initialState, action) {
   switch (action.type) {
     case ActionTypes.TOGGLE_TIMER: {
-      const {id: cardId} = action.card;
-      let {timers, activeTimer} = state;
+      const { id: cardId } = action.payload.card;
+      let { timers, activeTimer } = state;
 
       if (!timers[cardId]) {
         timers = Object.assign({}, timers, {
@@ -44,12 +44,13 @@ export default function timers(state = initialState, action) {
         });
       }
 
-      return Object.assign({}, {timers, activeTimer: timer(activeTimer, action)});
+      return Object.assign({}, { timers, activeTimer: timer(activeTimer, action) });
     }
     case ActionTypes.UPDATE_TIMER: {
-      const {timers, activeTimer} = state;
-      const cardId = activeTimer.card.id;
-      timers[cardId] = ++timers[cardId];
+      const { timers } = state;
+      const { cardId } = action.payload;
+      
+      timers[cardId]++;
 
       return Object.assign({}, state, { timers });
     }

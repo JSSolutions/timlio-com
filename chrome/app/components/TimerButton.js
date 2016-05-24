@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { dispatchToggleTimer, dispatchGetCard } from '../actions/mockActions';
+import { toggleTimer } from '../actions/mockActions';
 
 const logoUrl = chrome.extension.getURL('icons/icon.png');
 
@@ -22,7 +22,8 @@ export default class TimerButton extends Component {
   onClick(e) {
     e.stopPropagation();
     const { dispatch } = this.props;
-    dispatch(dispatchGetCard({ cardId: this.cardId, dispatchCb: dispatchToggleTimer }));
+    const { cardId } = this;
+    dispatch(toggleTimer({ cardId }));
   }
   render() {
     return (

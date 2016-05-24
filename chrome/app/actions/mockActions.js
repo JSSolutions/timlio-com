@@ -1,15 +1,8 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
-export function dispatchToggleTimer(payload) {
+export function toggleTimer(payload) {
   return {
-    type: ActionTypes.DISPATCH_TOGGLE_TIMER,
-    payload
-  }
-}
-
-export function dispatchGetCard(payload) {
-  return {
-    type: ActionTypes.DISPATCH_GET_CARD,
+    type: ActionTypes.ACTION_TIMER,
     payload
   }
 }

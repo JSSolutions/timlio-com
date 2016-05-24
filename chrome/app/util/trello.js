@@ -25,3 +25,11 @@ export const trelloAuth = () => {
     }
   });
 };
+
+export function getCard(cardId) {
+  return new Promise((resolve) => {
+    Trello.rest('GET', `cards/${cardId}`, {}, (data) => {
+      resolve(data);
+    });
+  });
+}
