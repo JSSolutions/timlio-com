@@ -1,3 +1,7 @@
-import timers from './timers';
+import { activeTimer, timers } from './timers';
+import { combineReducers } from 'redux';
 
-export default timers;
+export default combineReducers({
+  activeTimer,
+  timers
+});

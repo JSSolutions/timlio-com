@@ -35,8 +35,6 @@ export function actionTimer({ payload }) {
         dispatch(toggleTimer({ timerId, card }));
       });
     
-
-    
     return Promise.resolve({});
   }
 }

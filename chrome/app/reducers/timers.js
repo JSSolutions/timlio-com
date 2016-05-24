@@ -1,58 +1,35 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
-const initialState = {
-  activeTimer: {},
-  timers: {}
-};
-
-/*
-  activeTimer: {
-    card: {},
-    timerId: '',
-  },
-  timers: {
-    id1: 0,
-    id2: 10
-  }
- */
-
-function timer(state = {}, action) {
+export function activeTimer(state = {}, action) {
   switch (action.type) {
     case ActionTypes.TOGGLE_TIMER:
       const { timerId, card } = action.payload;
 
-      return Object.assign({}, state, {
-        timerId,
-        card
-      });
-    case ActionTypes.UPDATE_TIMER:
+      return { timerId, card };
     default:
       return state;
   }
 }
 
-
-export default function timers(state = initialState, action) {
+export function timers(state = {}, action) {
   switch (action.type) {
     case ActionTypes.TOGGLE_TIMER: {
       const { id: cardId } = action.payload.card;
-      let { timers, activeTimer } = state;
 
-      if (!timers[cardId]) {
-        timers = Object.assign({}, timers, {
+      if (!state[cardId]) {
+        state = Object.assign({}, state, {
           [cardId]: 0
         });
       }
 
-      return Object.assign({}, { timers, activeTimer: timer(activeTimer, action) });
+      return state;
     }
     case ActionTypes.UPDATE_TIMER: {
-      const { timers } = state;
       const { cardId } = action.payload;
-      
-      timers[cardId]++;
 
-      return Object.assign({}, state, { timers });
+      state[cardId]++;
+
+      return Object.assign({}, state);
     }
     default:
       return state;
