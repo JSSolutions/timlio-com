@@ -12,7 +12,7 @@ export const trelloAuth = () => {
     name: 'Timlio',
     type: 'popup',
     expiration: 'never',
-    interactive: false,
+    interactive: true,
     scope: { read: true, write: false },
     success() {
       chrome.extension.sendMessage({
