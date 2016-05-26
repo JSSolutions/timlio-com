@@ -41,13 +41,36 @@ const renderTimerButton = () => {
   });
 };
 
-window.addEventListener('load', () => {
-  const unsubscribe = store.subscribe(() => {
-    unsubscribe();
-    renderTimer();
-    renderTimerButton();
+function headerUserReady() {
+  return new Promise((resolve, reject) => {
+    const inc = 40;
+    let interval = 0;
+    const headerUserListener = ()  => {
+      const $headerUser = $('.header-user');
+      if ($headerUser.length != 0) {
+        resolve('true');
+      }
+      else {
+        if (++interval < inc) {
+          setTimeout(() => headerUserListener(), 100);
+        } else {
+          reject('Timeout');
+        }
+      }
+    };
+
+    headerUserListener();
   });
-  
+}
+
+const unsubscribe = store.subscribe(() => {
+  unsubscribe();
+  headerUserReady()
+    .then(() => renderTimer());
+  renderTimerButton();
+});
+
+window.addEventListener('load', () => {
   const target = document.querySelector('body');
   const config = { attributes: true, childList: true, subtree: true, characterData: true };
   const observer = new MutationObserver((mutations) => {
@@ -57,7 +80,7 @@ window.addEventListener('load', () => {
         if (!$anchors.length) {
           renderTimerButton();
         }
-        
+       
         const $timer = $('#header-timlio');
         if (!$timer.length) {
           renderTimer();
