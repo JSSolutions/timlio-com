@@ -15,7 +15,6 @@ export function toggleTimer(payload) {
   }
 }
 
-
 export function actionTimer({ payload }) {
   return (dispatch, getState) => {
     const { activeTimer } = getState();

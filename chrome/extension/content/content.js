@@ -42,8 +42,8 @@ const renderTimerButton = () => {
 };
 
 window.addEventListener('load', () => {
-  const unsubcribe = store.subscribe(() => {
-    unsubcribe();
+  const unsubscribe = store.subscribe(() => {
+    unsubscribe();
     renderTimer();
     renderTimerButton();
   });
