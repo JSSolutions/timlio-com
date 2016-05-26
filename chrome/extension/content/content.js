@@ -25,13 +25,13 @@ const renderTimer = () => {
     , $anchor[0]);
 };
 
-const renderTimerButton = () => {
+const renderTimerButtons = (node) => {
   const $anchor = $('<span class="anchor-btn"></span>');
-  const $iconEdit = $('.icon-edit');
+  const $iconEdit = $(node).find('.icon-edit');
 
   $anchor.insertBefore($iconEdit);
   
-  const $anchors = $('.anchor-btn');
+  const $anchors = $(node).find('.anchor-btn');
   $.each($anchors, (i, el) => {
     render(
       <Provider store={store}>
@@ -67,18 +67,22 @@ const unsubscribe = store.subscribe(() => {
   unsubscribe();
   headerUserReady()
     .then(() => renderTimer());
-  renderTimerButton();
+  renderTimerButtons(document.body);
 });
 
 window.addEventListener('load', () => {
-  const target = document.querySelector('body');
-  const config = { attributes: true, childList: true, subtree: true, characterData: true };
+  const target = document.body;
+  const config = { childList: true, subtree: true };
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.addedNodes.length) {
         const $anchors = $('.anchor-btn');
         if (!$anchors.length) {
-          renderTimerButton();
+          renderTimerButtons(target);
+        }
+        const node = mutation.addedNodes[0];
+        if ($(node).hasClass('list-card')) {
+          renderTimerButtons(node);
         }
        
         const $timer = $('#header-timlio');
