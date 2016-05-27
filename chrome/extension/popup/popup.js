@@ -8,8 +8,11 @@ const store = new Store({
   portName: 'timlio'
 });
 
-render(
-  <Provider store={store}>
-    <Timer/>
-  </Provider>
-, document.getElementById('timer'));
+const unsubscribe = store.subscribe(() => {
+  unsubscribe();
+  render(
+    <Provider store={store}>
+      <Timer/>
+    </Provider>
+    , document.getElementById('timer'));
+});

@@ -80,14 +80,21 @@ window.addEventListener('load', () => {
         if (!$anchors.length) {
           renderTimerButtons(target);
         }
+
+        const $timer = $('#header-timlio');
+        if (!$timer.length) {
+          renderTimer();
+        }
+
         const node = mutation.addedNodes[0];
         if ($(node).hasClass('list-card')) {
           renderTimerButtons(node);
         }
-       
-        const $timer = $('#header-timlio');
-        if (!$timer.length) {
-          renderTimer();
+
+        if ($(node).hasClass('card-detail-window')) {
+          /*
+           * TODO insert timer button to card detail window 
+           */
         }
       }
     });
