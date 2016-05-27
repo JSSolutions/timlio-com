@@ -6,6 +6,7 @@ import Timer from '../../app/containers/Timer';
 import TimerButton from '../../app/containers/TimerButton';
 import './content.css';
 import { trelloAuth } from '../../app/util/trello';
+import * as ButtonTypes from '../../app/constants/ButtonTypes';
 
 trelloAuth();
 
@@ -25,7 +26,7 @@ const renderTimer = () => {
     , $anchor[0]);
 };
 
-const renderTimerButtons = (node) => {
+const renderIconButtons = (node) => {
   const $anchor = $('<span class="anchor-btn"></span>');
   const $iconEdit = $(node).find('.icon-edit');
 
@@ -35,10 +36,23 @@ const renderTimerButtons = (node) => {
   $.each($anchors, (i, el) => {
     render(
       <Provider store={store}>
-        <TimerButton/>
+        <TimerButton type={ButtonTypes.ICON}/>
       </Provider>
       , el);
   });
+};
+
+const renderCardDetailButton = (node) => {
+  const $anchor = $('<span class="anchor-btn"></span>');
+  const $buttons = $(node).find('.other-actions').find('.u-clearfix');
+
+  $anchor.prependTo($buttons);
+
+  render(
+    <Provider store={store}>
+      <TimerButton type={ButtonTypes.CARD_DETAIL}/>
+    </Provider>
+    , $anchor[0]);
 };
 
 function headerUserReady() {
@@ -67,7 +81,7 @@ const unsubscribe = store.subscribe(() => {
   unsubscribe();
   headerUserReady()
     .then(() => renderTimer());
-  renderTimerButtons(document.body);
+  renderIconButtons(document.body);
 });
 
 window.addEventListener('load', () => {
@@ -78,7 +92,7 @@ window.addEventListener('load', () => {
       if (mutation.addedNodes.length) {
         const $anchors = $('.anchor-btn');
         if (!$anchors.length) {
-          renderTimerButtons(target);
+          renderIconButtons(target);
         }
 
         const $timer = $('#header-timlio');
@@ -88,13 +102,11 @@ window.addEventListener('load', () => {
 
         const node = mutation.addedNodes[0];
         if ($(node).hasClass('list-card')) {
-          renderTimerButtons(node);
+          renderIconButtons(node);
         }
 
         if ($(node).hasClass('card-detail-window')) {
-          /*
-           * TODO insert timer button to card detail window 
-           */
+          renderCardDetailButton(node);
         }
       }
     });

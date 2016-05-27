@@ -1,44 +1,37 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { toggleTimer } from '../actions/mockActions';
-import { hrefReady } from '../util/helpers';
-
-const logoUrl = chrome.extension.getURL('icons/icon.png');
+import IconButton from '../components/IconButton';
+import CardDetailButton from '../components/CardDetailButton';
+import * as ButtonTypes from '../constants/ButtonTypes';
 
 class TimerButton extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired
   };
-
-  componentDidMount() {
-    const target = this.refs.timerIcon;
-    target.addEventListener('click', this.onClick.bind(this), false);
-
-    const $cardName = $(target).parents('.list-card').find('.js-card-name');
-
-    hrefReady($cardName)
-      .then(() => {
-        this.cardId = $cardName.attr('href').split('/')[2];
-      });
-  }
-  componentWillUnmount() {
-    const target = this.refs.timerIcon;
-    target.removeEventListener('click', this.onClick.bind(this), false);
-  }
-  onClick(e) {
-    e.stopPropagation();
+  toggleTimer(cardId) {
     const { dispatch } = this.props;
-    const { cardId } = this;
     dispatch(toggleTimer({ cardId }));
   }
   render() {
-    return (
-      <span ref='timerIcon' className="icon-sm list-card-operation dark-hover timer-btn">
-        <img src={logoUrl}/>
-      </span>
-    )
+    const { type } = this.props;
+    if (type === ButtonTypes.ICON) {
+      return (
+        <IconButton toggleTimer={this.toggleTimer.bind(this)}/>
+      )
+    } else if (type === ButtonTypes.CARD_DETAIL) {
+      return (
+        <CardDetailButton toggleTimer={this.toggleTimer.bind(this)}/>
+      )
+    }
   }
 }
 
-export default connect()(TimerButton);
+const mapStateToProps = (state, ownProps) => {
+  return { 
+    type: ownProps.type 
+  }
+};
+
+export default connect(mapStateToProps)(TimerButton);
 
