@@ -13,3 +13,7 @@
 .timer-btn {
   right: 30px;
 }
+.btn-text {
+  position: absolute;
+  padding-left: 4px;
+}
