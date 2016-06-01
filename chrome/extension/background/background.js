@@ -1,9 +1,7 @@
 import store from '../../app/store/configureStore';
 import { wrapStore } from 'react-chrome-redux';
 import { trelloInit } from '../../app/util/trello';
-import { APP_KEY } from '../../app/config';
-import asteroid from '../../app/util/asteroid';
-import { getCurrentUser } from '../../app/util/trello';
+import { loginWithTrello } from '../../app/util/asteroid';
 
 wrapStore(store, {
   portName: 'timlio'
@@ -14,23 +12,9 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
   if (request.command == 'saveToken') {
     localStorage.setItem('trello_token', request.token);
     trelloInit();
-    const credentials = {
-      trello: {
-        appKey: APP_KEY,
-        authToken: request.token,
-        expirationTime: 1000
-      }
-    };
-    asteroid.login(credentials, (err, result) => {
-      if (!err) {
-        console.log(result);
-      } else {
-        console.log(err)
-      }
-    });
-    getCurrentUser()
-      .then((user) => console.log(user));
-    console.log(asteroid);
+    loginWithTrello()
+      .then((data) => console.log('loginWithTrello Success'))
+      .catch((err) => console.log('loginWithTrello Error'));
     sendResponse();
     return true;
   }
