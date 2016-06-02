@@ -6,6 +6,10 @@ export function activeTimer(state = {}, action) {
       const { timerId, card } = action.payload;
 
       return { timerId, card };
+    case ActionTypes.SET_TIME_TRACK:
+      const { timeTrackId } = action.payload;
+      
+      return Object.assign({}, state, { timeTrackId });
     default:
       return state;
   }
