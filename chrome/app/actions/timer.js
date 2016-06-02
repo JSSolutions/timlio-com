@@ -31,7 +31,7 @@ export function actionTimer({ payload }) {
 
     if (activeCard.id && timeTrackId) {
       clearInterval(timerId);
-      console.log(timeTrackId);
+
       Asteroid.stopTimer(timeTrackId)
         .then(() => console.log('Timer Success'))
         .catch((err) => console.log(`Error ${err.message}`));
