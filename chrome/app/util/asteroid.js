@@ -2,11 +2,10 @@ import { createClass } from 'asteroid';
 import { APP_KEY } from '../config';
 
 const Asteroid = createClass();
-// Connect to a Meteor backend
+
 const asteroid = new Asteroid({
   endpoint: 'ws://localhost:3000/websocket'
 });
-
 
 asteroid.ddp.on('added', ({collection, id, fields}) => {
   console.log(`Element added to collection ${collection}`);
@@ -24,4 +23,12 @@ export const loginWithTrello = () => {
   };
   
   return asteroid.login(params);
+};
+
+export const startTimer = (cardId) => {
+  return asteroid.call('TimeTrackEntries.insert', { cardId });
+};
+
+export const stopTimer = (_id) => {
+  return asteroid.call('TimeTrackEntries.update', { _id });
 };

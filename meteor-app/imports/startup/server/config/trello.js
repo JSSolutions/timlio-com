@@ -80,7 +80,7 @@ Accounts.registerLoginHandler('trello', function(params) {
 
 function getIdentity(key, token, fields) {
   try {
-    return HTTP.get("https://api.trello.com/1/members/me", {
+    return HTTP.get('https://api.trello.com/1/members/me', {
       params: {
         key,
         token,
@@ -88,7 +88,7 @@ function getIdentity(key, token, fields) {
       }
     }).data;
   } catch (err) {
-    throw _.extend(new Error("Failed to fetch identity from Trello. " + err.message),
-      {response: err.response});
+    throw _.extend(new Error(`Failed to fetch identity from Trello. ${err.message}`),
+      { response: err.response });
   }
 }

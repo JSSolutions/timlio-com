@@ -11,10 +11,13 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
   // Now we have a token saved locally, as fetched from the settings page after authorization.
   if (request.command == 'saveToken') {
     localStorage.setItem('trello_token', request.token);
+    
     trelloInit();
+    
     loginWithTrello()
-      .then((data) => console.log('loginWithTrello Success'))
-      .catch((err) => console.log('loginWithTrello Error'));
+      .then((res) => console.log('loginWithTrello Success'))
+      .catch((err) => console.log(`loginWithTrello Error ${err.message}`));
+    
     sendResponse();
     return true;
   }
