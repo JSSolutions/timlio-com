@@ -4,7 +4,7 @@ import { APP_KEY } from '../config';
 const Asteroid = createClass();
 
 const asteroid = new Asteroid({
-  endpoint: 'ws://localhost:3000/websocket'
+  endpoint: 'ws://localhost:2000/websocket'
 });
 
 asteroid.ddp.on('added', ({collection, id, fields}) => {
