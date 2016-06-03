@@ -1,7 +1,7 @@
 import store from '../../app/store/configureStore';
 import { wrapStore } from 'react-chrome-redux';
 import { trelloInit } from '../../app/util/trello';
-import { loginWithTrello } from '../../app/util/asteroid';
+import { loginWithTrello, isLoggedIn } from '../../app/util/asteroid';
 
 wrapStore(store, {
   portName: 'timlio'
@@ -14,9 +14,11 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
     
     trelloInit();
     
-    loginWithTrello()
-      .then((res) => console.log('loginWithTrello Success'))
-      .catch((err) => console.log(`loginWithTrello Error ${err.message}`));
+    if (!isLoggedIn()) {
+      loginWithTrello()
+        .then((res) => console.log('loginWithTrello Success'))
+        .catch((err) => console.log(`loginWithTrello Error ${err.message}`));
+    }
     
     sendResponse();
     return true;

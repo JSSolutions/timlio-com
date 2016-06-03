@@ -25,6 +25,10 @@ export const loginWithTrello = () => {
   return asteroid.login(params);
 };
 
+export const isLoggedIn = () => {
+  return asteroid.loggedIn();
+};
+
 export const startTimer = (cardId) => {
   return asteroid.call('TimeTrackEntries.insert', { cardId });
 };
