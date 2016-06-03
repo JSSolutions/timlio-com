@@ -1,6 +1,6 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
-export function toggleTimer(payload) {
+export function actionTimer(payload) {
   return {
     type: ActionTypes.ACTION_TIMER,
     payload

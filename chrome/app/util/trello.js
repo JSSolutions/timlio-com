@@ -37,8 +37,15 @@ export function getCard(cardId) {
 export function getCurrentUser() {
   return new Promise((resolve) => {
     Trello.rest('GET', 'members/me', {}, (data) => {
-      resolve(data)
+      resolve(data);
     });
   });
 }
 
+export function getBoardByCard(cardId) {
+  return new Promise((resolve) => {
+    Trello.rest('GET', `cards/${cardId}/board`, {}, (data) => {
+      resolve(data);
+    })
+  })
+}

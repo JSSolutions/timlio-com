@@ -2,7 +2,7 @@ import * as ActionTypes from '../constants/ActionTypes';
 
 export function activeTimer(state = {}, action) {
   switch (action.type) {
-    case ActionTypes.TOGGLE_TIMER:
+    case ActionTypes.SET_TIMER:
       const { timerId, card } = action.payload;
 
       return { timerId, card };
@@ -17,7 +17,7 @@ export function activeTimer(state = {}, action) {
 
 export function timers(state = {}, action) {
   switch (action.type) {
-    case ActionTypes.TOGGLE_TIMER: {
+    case ActionTypes.SET_TIMER: {
       const { id: cardId } = action.payload.card;
 
       if (!state[cardId]) {
@@ -38,4 +38,14 @@ export function timers(state = {}, action) {
     default:
       return state;
   }
+}
+
+export function getActiveCard({ activeTimer }) {
+  return activeTimer.card;
+}
+
+export function getActiveTime({ activeTimer, timers }) {
+  const { card = {} } = activeTimer;
+
+  return timers[card.id];
 }

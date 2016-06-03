@@ -4,7 +4,7 @@ import { LOGO_URL } from '../config';
 
 export default class IconButton extends Component {
   static propTypes = {
-    toggleTimer: PropTypes.func.isRequired
+    actionTimer: PropTypes.func.isRequired
   };
   componentDidMount() {
     const target = this.refs.iconButton;
@@ -19,8 +19,8 @@ export default class IconButton extends Component {
   }
   onClick(e) {
     e.stopPropagation();
-    const { toggleTimer } = this.props;
-    toggleTimer(this.cardId);
+    const { actionTimer } = this.props;
+    actionTimer(this.cardId);
   }
   render() {
     return (

@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { LOGO_URL } from '../config';
 
 export default class CardDetailButton extends Component {
+  static propTypes = {
+    actionTimer: PropTypes.func.isRequired
+  };
   componentDidMount() {
     const target = this.refs.cardDetailButton;
     $(target).click(this.onClick.bind(this));
@@ -10,8 +13,8 @@ export default class CardDetailButton extends Component {
   }
   onClick(e) {
     e.preventDefault();
-    const { toggleTimer } = this.props;
-    toggleTimer(this.cardId);
+    const { actionTimer } = this.props;
+    actionTimer(this.cardId);
   }
   render() {
     return (

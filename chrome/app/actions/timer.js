@@ -1,5 +1,5 @@
 import * as ActionTypes from '../constants/ActionTypes';
-import { getCard } from '../util/trello';
+import { getCard, getBoardByCard } from '../util/trello';
 import * as Asteroid from '../util/asteroid';
 
 export function updateTimer(payload) {
@@ -9,9 +9,9 @@ export function updateTimer(payload) {
   }
 }
 
-export function toggleTimer(payload) {
+export function setTimer(payload) {
   return {
-    type: ActionTypes.TOGGLE_TIMER,
+    type: ActionTypes.SET_TIMER,
     payload
   }
 }
@@ -23,37 +23,46 @@ export function setTimeTrack(payload) {
   }
 }
 
+export function stopTimerIfRunning({ timeTrackId, timerId }) {
+  if (timeTrackId) {
+    clearInterval(timerId);
+    
+    Asteroid.stopTimer(timeTrackId)
+      .then(() => console.log('Stop timer Success'))
+      .catch((err) => console.log(`Error ${err.message}`));
+  }
+}
+
+export function toggleTimer(receivedCard, activeTimer) {
+  return (dispatch) => {
+    let { timerId = null, card: activeCard = { id: '' } } = activeTimer;
+    let p = null;
+    if (receivedCard.id !== activeCard.id || !timerId) {
+      timerId = setInterval(() => dispatch(updateTimer({ cardId: receivedCard.id })), 1000);
+
+      p = Asteroid.startTimer(receivedCard.id);
+    } else {
+      timerId = null;
+    }
+
+    dispatch(setTimer({ timerId, card: receivedCard }));
+    return p;
+  }
+}
+
 export function actionTimer({ payload }) {
   return (dispatch, getState) => {
     const { activeTimer } = getState();
-    let { timerId = null, card: activeCard = { id: '' }, timeTrackId } = activeTimer;
     const { cardId } = payload;
-
-    if (activeCard.id && timeTrackId) {
-      clearInterval(timerId);
-
-      Asteroid.stopTimer(timeTrackId)
-        .then(() => console.log('Timer Success'))
-        .catch((err) => console.log(`Error ${err.message}`));
-    }
     
-    getCard(cardId)
-      .then((card) => {
-        let p = null;
-        if (card.id !== activeCard.id || !timerId) {
-          timerId = setInterval(() => dispatch(updateTimer({ cardId: card.id })), 1000);
-          p = Asteroid.startTimer(card.id);
-        } else {
-          timerId = null;
-        }
-        
-        dispatch(toggleTimer({ timerId, card }));
-        return p;
-      })
-      .then((timeTrackId) => dispatch(setTimeTrack({ timeTrackId })))
-      .catch((err) => console.log(`Error ${err.message}`));
+    stopTimerIfRunning(activeTimer);
     
-    return Promise.resolve({});
+    return Promise.resolve(
+      getCard(cardId)
+        .then((receivedCard) => dispatch(toggleTimer(receivedCard, activeTimer)))
+        .then((timeTrackId) => dispatch(setTimeTrack({ timeTrackId })))
+        .catch((err) => console.log(`Error ${err.message}`, err))
+    );
   }
 }
 

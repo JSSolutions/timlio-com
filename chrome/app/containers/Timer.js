@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { digitize, getHours, getMinutes, getSeconds } from '../util/time';
+import { getActiveTime, getActiveCard } from '../reducers/timers';
 
 class Timer extends Component {
   static propTypes = {
@@ -9,7 +10,7 @@ class Timer extends Component {
     time: PropTypes.number
   };
   renderTime() {
-    const { time, card = { name: '' } } = this.props;
+    const { time = 0, card = { name: '' } } = this.props;
     const minutes = getMinutes(time);
     const hours = getHours(time);
     const seconds = getSeconds(time);
@@ -27,14 +28,10 @@ class Timer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { activeTimer, timers } = state;
-  const { card = null } = activeTimer;
-
   return {
-    card: activeTimer.card,
-    time: card ? timers[card.id] : 0
+    card: getActiveCard(state),
+    time: getActiveTime(state)
   }
 };
-
 
 export default connect(mapStateToProps)(Timer);
