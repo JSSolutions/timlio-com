@@ -1,5 +1,5 @@
 import * as ActionTypes from '../constants/ActionTypes';
-import { getCard, getBoardByCard } from '../util/trello';
+import { getCard } from '../util/trello';
 import * as Asteroid from '../util/asteroid';
 
 export function updateTimer(payload) {
