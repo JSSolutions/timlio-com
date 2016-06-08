@@ -23,7 +23,7 @@ export function setTimeTrack(payload) {
   }
 }
 
-export function stopTimerIfRunning({ timeTrackId, timerId }) {
+function stopTimerIfRunning({ timeTrackId, timerId }) {
   if (timeTrackId) {
     clearInterval(timerId);
     
@@ -33,38 +33,35 @@ export function stopTimerIfRunning({ timeTrackId, timerId }) {
   }
 }
 
-export function toggleTimer(receivedCard, activeTimer) {
-  return (dispatch) => {
-    let { timerId = null, card: activeCard = { id: '' } } = activeTimer;
-    let p = null;
-    if (receivedCard.id !== activeCard.id || !timerId) {
-      timerId = setInterval(() => dispatch(updateTimer({ cardId: receivedCard.id })), 1000);
+const toggleTimer = (receivedCard, activeTimer) => (dispatch) => {
+  let { timerId = null, card: activeCard = { id: '' } } = activeTimer;
+  let p = null;
 
-      p = Asteroid.startTimer(receivedCard.id);
-    } else {
-      timerId = null;
-    }
+  if (receivedCard.id !== activeCard.id || !timerId) {
+    timerId = setInterval(() => dispatch(updateTimer({ cardId: receivedCard.id })), 1000);
 
-    dispatch(setTimer({ timerId, card: receivedCard }));
-    return p;
+    p = Asteroid.startTimer(receivedCard);
+  } else {
+    timerId = null;
   }
-}
 
-export function actionTimer({ payload }) {
-  return (dispatch, getState) => {
-    const { activeTimer } = getState();
-    const { cardId } = payload;
-    
-    stopTimerIfRunning(activeTimer);
-    
-    return Promise.resolve(
-      getCard(cardId)
-        .then((receivedCard) => dispatch(toggleTimer(receivedCard, activeTimer)))
-        .then((timeTrackId) => dispatch(setTimeTrack({ timeTrackId })))
-        .catch((err) => console.log(`Error ${err.message}`, err))
-    );
-  }
-}
+  dispatch(setTimer({ timerId, card: receivedCard }));
+  return p;
+};
+
+export const actionTimer = ({ payload }) => (dispatch, getState) => {
+  const { activeTimer } = getState();
+  const { cardId } = payload;
+
+  stopTimerIfRunning(activeTimer);
+
+  return Promise.resolve(
+    getCard(cardId)
+      .then((receivedCard) => dispatch(toggleTimer(receivedCard, activeTimer)))
+      .then((timeTrackId) => dispatch(setTimeTrack({ timeTrackId })))
+      .catch((err) => console.log(`Error ${err.message}`, err))
+  );
+};
 
 
 

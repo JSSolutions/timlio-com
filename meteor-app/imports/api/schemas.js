@@ -1,7 +1,5 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-export const TrelloRegExId = /^[a-f\d]{24}$/i;
-
 export const BaseSchema = new SimpleSchema({
   createdBy: {
     type: String,
@@ -51,6 +49,8 @@ export const BaseSchema = new SimpleSchema({
   }
 });
 
+const TrelloRegExId = /^[a-f\d]{24}$/i;
+
 const trelloIdSchemaDoc = {
   type: String,
   regEx: TrelloRegExId
@@ -58,12 +58,15 @@ const trelloIdSchemaDoc = {
 
 const idSchemaDoc = {
   type: String,
-  regEx: SimpleSchema.RegEx.Id,
-  optional: true
+  regEx: SimpleSchema.RegEx.Id
 };
 
 export const IdSchema = new SimpleSchema({
   _id: idSchemaDoc
+});
+
+export const TrelloIdSchema = new SimpleSchema({
+  _id: trelloIdSchemaDoc
 });
 
 export const CardIdSchema = new SimpleSchema({
@@ -79,5 +82,11 @@ export const ListIdSchema = new SimpleSchema({
 });
 
 export const BoardIdSchema = new SimpleSchema({
-  listId: trelloIdSchemaDoc
+  boardId: trelloIdSchemaDoc
+});
+
+export const NameSchema = new SimpleSchema({
+  name: {
+    type: String
+  }
 });
