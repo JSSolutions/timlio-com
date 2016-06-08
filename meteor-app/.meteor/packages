@@ -27,3 +27,4 @@ jsep:accounts-trello
 http
 react-meteor-data
 static-html
+twbs:bootstrap

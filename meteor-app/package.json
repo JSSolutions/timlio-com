@@ -5,8 +5,14 @@
     "start": "meteor run"
   },
   "dependencies": {
-    "chart.js": "^2.1.4",
+    "chart.js": ">= 1.1.1 & < 2.0",
+    "gregorian-calendar": "^4.1.4",
+    "gregorian-calendar-format": "^4.1.2",
+    "indexof": "0.0.1",
     "meteor-node-stubs": "~0.2.0",
+    "moment": "^2.13.0",
+    "rc-calendar": "^5.5.4",
+    "rc-time-picker": "^1.1.4",
     "react": "^15.0.2",
     "react-chartjs": "^0.7.3",
     "react-dom": "^15.0.2",
