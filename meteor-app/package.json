@@ -5,6 +5,7 @@
     "start": "meteor run"
   },
   "dependencies": {
+    "body-parser": "^1.15.1",
     "chart.js": ">= 1.1.1 & < 2.0",
     "gregorian-calendar": "^4.1.4",
     "gregorian-calendar-format": "^4.1.2",

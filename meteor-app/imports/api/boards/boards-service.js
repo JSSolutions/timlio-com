@@ -7,6 +7,7 @@ const BoardsService = Object.assign(createService(Boards), {
     if (!this.collection.findOne(boardId)) {
       const user = Meteor.user();
       const { token } = user.services.trello;
+      
       const board = Trello.getBoard(boardId, token);
 
       return this.insert({

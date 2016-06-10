@@ -25,7 +25,7 @@ export const insert = new ValidatedMethod({
     ListsService.createIfNotExists(doc.listId);
     
     BoardsService.createIfNotExists(doc.boardId);
-    
+        
     return TimeTrackService.insert({ cardId: doc.cardId, userId: this.userId });
   }
 });

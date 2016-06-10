@@ -28,3 +28,4 @@ http
 react-meteor-data
 static-html
 twbs:bootstrap
+meteorhacks:picker
