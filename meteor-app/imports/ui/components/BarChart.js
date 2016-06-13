@@ -5,7 +5,7 @@ import moment from 'moment';
 function random(length, max) {
   let arr = [];
   for(let i = 0; i < length; i++)
-    arr.push(Math.ceil(Math.random() * max))
+    arr.push((Math.random() * max))
   return arr;
 }
 

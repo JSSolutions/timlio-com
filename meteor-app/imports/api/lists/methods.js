@@ -16,7 +16,7 @@ export const insert = new ValidatedMethod({
       );
     }
     
-    ListsService.insert({ boardId, title });
+    ListsService.insert({ boardId, name });
   }
 });
 
