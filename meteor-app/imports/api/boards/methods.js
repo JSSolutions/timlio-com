@@ -3,6 +3,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { BoardsSchema } from './boards-schema';
 import BoardsService from './boards-service';
+import { IdSchema } from '../schemas';
 
 export const insert = new ValidatedMethod({
   name: 'Boards.insert',
@@ -17,5 +18,37 @@ export const insert = new ValidatedMethod({
     }
     
     return BoardsService.insert(doc);
+  }
+});
+
+export const update = new ValidatedMethod({
+  name: 'Boards.update',
+  
+  validate: IdSchema.validator(),
+  
+  run({ _id }) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        403, 'Unauthorized user cannot update a board'
+      );
+    }
+
+    return BoardsService.update({ _id });
+  }
+});
+
+export const remove = new ValidatedMethod({
+  name: 'Boards.remove',
+  
+  validate: IdSchema.validator(),
+  
+  run({ _id }) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        403, 'Unauthorized user cannot remove a board'
+      );
+    }
+
+    return BoardsService.remove({ _id });
   }
 });
