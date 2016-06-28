@@ -1,20 +1,20 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { ServiceConfiguration } from 'meteor/service-configuration';
+import { TrelloEndpoint } from '../../../api/constants';
 
 const { trello } = Meteor.settings;
 
 ServiceConfiguration.configurations.upsert({ service: 'trello' }, {
   $set: {
     name: 'Timlio-com',
-    consumerKey: trello.app_key,
+    consumerKey: trello.appKey,
     secret: trello.token,
     scope: ['read', 'write', 'account'],
     loginStyle: 'popup',
     expiration: 'never'
   }
 });
-
 
 Accounts.registerLoginHandler('trello', function(params) {
   const data = params.trello;
@@ -80,7 +80,7 @@ Accounts.registerLoginHandler('trello', function(params) {
 
 function getIdentity(key, token, fields) {
   try {
-    return HTTP.get('https://api.trello.com/1/members/me', {
+    return HTTP.get(`${TrelloEndpoint}members/me`, {
       params: {
         key,
         token,

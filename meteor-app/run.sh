@@ -1,1 +1,1 @@
-meteor --settings settings.json -p 2000
+meteor --settings settings-local.json -p 2000

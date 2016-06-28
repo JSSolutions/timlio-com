@@ -1,21 +1,32 @@
 import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import TimeTrackService from '../time-track-entries/time-track-entries-service';
-import { CardIdSchema, IdSchema } from '../schemas';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import TimeTrackService from './time-track-entries-service';
+import { CardIdSchema, IdSchema, BoardIdSchema, ListIdSchema, NameSchema } from '../schemas';
+import ListsService from '../lists/lists-service';
+import BoardsService from '../boards/boards-service';
+import CardsService from '../cards/cards-service';
+
 
 export const insert = new ValidatedMethod({
   name: 'TimeTrackEntries.insert',
 
-  validate: CardIdSchema.validator(),
+  validate: new SimpleSchema([CardIdSchema, BoardIdSchema, ListIdSchema, NameSchema]).validator(),
 
-  run({ cardId }) {
+  run(doc) {
     if (!this.userId) {
       throw new Meteor.Error(
         403, 'Unauthorized user cannot create a time entry'
       );
     }
 
-    return TimeTrackService.insert({ cardId, userId: this.userId });
+    CardsService.createIfNotExists(doc);
+    
+    ListsService.createIfNotExists(doc.listId);
+    
+    BoardsService.createIfNotExists(doc.boardId);
+        
+    return TimeTrackService.insert({ cardId: doc.cardId, userId: this.userId });
   }
 });
 
@@ -30,6 +41,7 @@ export const update = new ValidatedMethod({
         403, 'Unauthorized user cannot update a time entry'
       );
     }
-    return TimeTrackService.update(_id);
+    
+    return TimeTrackService.update({ _id });
   }
 });

@@ -1,18 +1,6 @@
-import { TimeTrackEntries } from '../time-track-entries/time-track-entries';
+import { TimeTrackEntries } from './time-track-entries';
+import { createService } from '../helpers'
 
-export default TimeTrackEntryService = {
+const TimeTrackEntryService = createService(TimeTrackEntries);
 
-  collection: TimeTrackEntries,
-
-  insert(doc) {
-    return this.collection.insert(doc);
-  },
-
-  update(_id) {
-    return this.collection.update(_id, {});
-  },
-
-  remove({ _id }) {
-    return this.collection.remove({ _id });
-  }
-};
+export default TimeTrackEntryService;
