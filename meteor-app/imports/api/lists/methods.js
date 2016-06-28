@@ -22,7 +22,7 @@ export const insert = new ValidatedMethod({
 });
 
 export const update = new ValidatedMethod({
-  name: 'Lists.insert',
+  name: 'Lists.update',
 
   validate: IdSchema.validator(),
 
