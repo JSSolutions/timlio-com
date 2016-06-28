@@ -20,7 +20,7 @@ export const BaseSchema = new SimpleSchema({
       if (this.isInsert) {
         return new Date();
       } else {
-        this.unset();  // Prevent user from supplying their own value
+        this.unset();
       }
     }
   },
@@ -47,4 +47,46 @@ export const BaseSchema = new SimpleSchema({
       }
     }
   }
-}); 
+});
+
+const TrelloRegExId = /^[a-f\d]{24}$/i;
+
+const trelloIdSchemaDoc = {
+  type: String,
+  regEx: TrelloRegExId
+};
+
+const idSchemaDoc = {
+  type: String,
+  regEx: SimpleSchema.RegEx.Id
+};
+
+export const IdSchema = new SimpleSchema({
+  _id: idSchemaDoc
+});
+
+export const TrelloIdSchema = new SimpleSchema({
+  _id: trelloIdSchemaDoc
+});
+
+export const CardIdSchema = new SimpleSchema({
+  cardId: trelloIdSchemaDoc
+});
+
+export const UserIdSchema = new SimpleSchema({
+  userId: idSchemaDoc
+});
+
+export const ListIdSchema = new SimpleSchema({
+  listId: trelloIdSchemaDoc
+});
+
+export const BoardIdSchema = new SimpleSchema({
+  boardId: trelloIdSchemaDoc
+});
+
+export const NameSchema = new SimpleSchema({
+  name: {
+    type: String
+  }
+});

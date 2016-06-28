@@ -1,0 +1,19 @@
+.header-timer {
+  position: absolute;
+  min-width: 30px;
+  top: 5px;
+  right: 250px;
+  color: #fff;
+  float: right;
+  height: 30px;
+  font-size: 18px;
+  line-height: 30px;
+  margin-right: 8px;
+}
+.timer-btn {
+  right: 30px;
+}
+.btn-text {
+  position: absolute;
+  padding-left: 4px;
+}

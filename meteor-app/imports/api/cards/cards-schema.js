@@ -1,13 +1,4 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { BaseSchema, ListIdSchema, BoardIdSchema, NameSchema } from '../schemas.js';
 
-import { BaseSchema } from '../schemas.js';
-
-export const CardsSchema = new SimpleSchema([BaseSchema, {
-  title: {
-    type: String
-  },
-  listId: {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id
-  }
-}]);
+export const CardsSchema = new SimpleSchema([BaseSchema, ListIdSchema, BoardIdSchema, NameSchema]);

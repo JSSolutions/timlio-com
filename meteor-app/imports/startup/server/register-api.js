@@ -1,13 +1,13 @@
-import '../../api/boards/server/publications.js';
-import '../../api/boards/boards-schema.js';
-import '../../api/boards/boards.js';
+import '../../api/boards/server/publications';
+import '../../api/boards/methods';
 
-import '../../api/lists/server/publications.js';
-import '../../api/lists/lists-schema.js';
-import '../../api/lists/lists.js';
+import '../../api/lists/server/publications';
+import '../../api/lists/methods';
 
-import '../../api/cards/server/publications.js';
-import '../../api/cards/cards-schema.js';
-import '../../api/cards/cards.js';
+import '../../api/cards/server/publications';
+import '../../api/cards/methods';
 
-import '../../api/users/server/publications.js';
+import '../../api/time-track-entries/server/publications';
+import '../../api/time-track-entries/methods';
+
+import '../../api/users/server/publications';

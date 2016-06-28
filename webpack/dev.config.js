@@ -1,9 +1,15 @@
 import path from 'path';
 import webpack from 'webpack';
 
+const extensionPath = path.join(__dirname, '../chrome/extension/');
+
 const baseDevConfig = () => ({
-  devtool: 'eval-cheap-module-source-map',
-  //TODO: configure entry
+  devtool: 'inline-source-map',
+  entry: {
+    content: `${extensionPath}content/content.js`,
+    background: `${extensionPath}background/background.js`,
+    popup: `${extensionPath}popup/popup.js`
+  },
   output: {
     path: path.join(__dirname, '../dev/js'),
     filename: '[name].bundle.js',
@@ -17,6 +23,10 @@ const baseDevConfig = () => ({
       'process.env': {
         NODE_ENV: JSON.stringify('development')
       }
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
     })
   ],
   resolve: {
@@ -32,7 +42,7 @@ const baseDevConfig = () => ({
         test: /\.css$/,
         loaders: [
           'style',
-          'css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'css?sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
           'postcss'
       ]
     }]
