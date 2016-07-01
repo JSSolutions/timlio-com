@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import TimeTrackService from './time-track-entries-service';
-import { CardIdSchema, IdSchema, BoardIdSchema, ListIdSchema, NameSchema } from '../schemas';
+import { CardIdSchema, IdSchema, BoardIdSchema, ListIdSchema, NameSchema, UserIdSchema } from '../schemas';
 import ListsService from '../lists/lists-service';
 import BoardsService from '../boards/boards-service';
 import CardsService from '../cards/cards-service';
@@ -43,5 +43,67 @@ export const update = new ValidatedMethod({
     }
     
     return TimeTrackService.update({ _id });
+  }
+});
+
+export const getUserCardsTime = new ValidatedMethod({
+  name: 'TimeTrackEntries.getUserCardsTime',
+  
+  validate: UserIdSchema.validator(),
+  
+  run({ userId }) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        403, 'Unauthorized user'
+      );
+    }
+    
+    if (this.isSimulation) {
+      return;
+    }
+
+    return TimeTrackService.timeOnCards(userId);
+  }
+});
+
+export const getUserBoardsTime = new ValidatedMethod({
+  name: 'TimeTrackEntries.getUserBoardsTime',
+
+  validate: UserIdSchema.validator(),
+
+  run({ userId }) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        403, 'Unauthorized user'
+      );
+    }
+
+    if (this.isSimulation) {
+      return;
+    }
+
+    return TimeTrackService.timeOnBoards(userId);
+  }
+});
+
+export const getUserTimeByDates = new ValidatedMethod({
+  name: 'TimeTrackEntries.getUserTimeByDates',
+
+  validate: new SimpleSchema([
+    { startDate: { type: Date }, endDate: { type: Date }}, 
+    UserIdSchema]).validator(),
+
+  run({ startDate, endDate, userId }) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        403, 'Unauthorized user'
+      );
+    }
+
+    if (this.isSimulation) {
+      return;
+    }
+
+    return TimeTrackService.betweenDates(startDate, endDate, userId);
   }
 });
