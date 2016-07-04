@@ -9,7 +9,7 @@ function random(length, max) {
   return arr;
 }
 
-function getDaysBetween(startValue, endValue, data) {
+function getChartData(startValue, endValue, data) {
   const startTime = moment(startValue.getTime());
   const endTime = moment(endValue.getTime());
   const diff = endTime.diff(startTime, 'days');
@@ -22,6 +22,7 @@ function getDaysBetween(startValue, endValue, data) {
     days.push(moment(tempDate));
   }
   const format = 'ddd, MMM Do';
+  
   return days.map((day) => {
     const found = data.find((item) => {
       const tempDay = moment([item.year, item.month - 1, item.day]);
@@ -34,19 +35,19 @@ function getDaysBetween(startValue, endValue, data) {
   });
 }
 
-
 const BarChart = (props) => {
-  const { startValue, endValue, data } = props;
-  const days = getDaysBetween(startValue, endValue, data);
-
+  const { startDate, endDate, timeByDay } = props;
+  console.log(props);
+  const days = getChartData(startDate, endDate, timeByDay);
+  const data = _.pluck(days, 'time').map((dayTime) => 
+    Math.random() * 10);
   const chartData = {
     labels: _.pluck(days, 'format'),
     datasets: [
       {
-        label: 'My First dataset',
+        data,
         fillColor: 'rgba(255,150,132,0.2)',
         strokeColor: 'rgba(255,99,131,0.8)',
-        data: _.pluck(days, 'time').map((dayTime) => dayTime / 1000 / 3600),
         highlightFill: 'rgba(255,99,132,0.4)',
         highlightStroke: 'rgba(255,99,132,1)'
       }
@@ -55,15 +56,7 @@ const BarChart = (props) => {
 
   const chartOptions = {
     responsive: true,
-    barStrokeWidth: 1,
-    scales: {
-      xAxes: [{
-        stacked: true
-      }],
-      yAxes: [{
-        stacked: true
-      }]
-    }
+    barStrokeWidth: 1
   };
   return (
     <Bar data={chartData} options={chartOptions} width="860" height="550" redraw/>

@@ -1,53 +1,54 @@
 import React, { Component } from 'react';
-import GregorianCalendar from 'gregorian-calendar';
-import enUS from 'gregorian-calendar/lib/locale/en_US';
-import moment from 'moment';
+import { connect } from 'react-redux';
 import BarChart from './BarChart';
 import Calendar from './Calendar';
-import { getUserTimeByDates } from '../../api/time-track-entries/methods';
+import DateTimeFormat from 'gregorian-calendar-format';
+import { getRange } from '../redux/reducers';
+import { fetchTimeByDay } from '../redux/actions';
+import { withRouter } from 'react-router';
+import { toUnderscore } from '../helpers';
 
 export default class TimeTrackStats extends Component {
-  constructor(props) {
-    super(props);
-    
-    const endValue = new GregorianCalendar(enUS);
-    endValue.setTime(new Date());
-    
-    const startValue = new GregorianCalendar(enUS);
-    startValue.setTime(moment().subtract(6, 'days'));
-
-    this.state = {
-      startValue,
-      endValue
-    };
-  }
   componentDidMount() {
-    getUserTimeByDates.call({
-      startDate: new Date(this.state.startValue.getTime()), endDate: new Date(this.state.endValue.getTime()), userId: Meteor.userId()
-    }, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      
-      this.setState(Object.assign({}, this.state, { data: result }));
-    });
+    this.fetchData();
+  }
+  fetchData() {
+    const { startDate, endDate, dispatch } = this.props;
+    dispatch(fetchTimeByDay(startDate, endDate, Meteor.userId()));
   }
   onChange(field, value) {
-    this.setState({
-      [field]: value
+    const { router } = this.props;
+    const formatter = new DateTimeFormat('yyyy-MM-dd');
+    router.push({
+      query: {
+        [toUnderscore(field)]: formatter.format(value)
+      }
     });
+    
   }
   renderChart() {
-    if (this.state.data) {
-      return (<BarChart {...this.state}/>);
+    if (this.props.timeByDay) {
+      return (<BarChart {...this.props}/>);
     }
   }
   render() {
     return (
       <div>
-        <Calendar onChange={this.onChange.bind(this)} {...this.state}/>
+        <Calendar onChange={this.onChange.bind(this)} {...this.props}/>
         {this.renderChart()}
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { startDate, endDate } = getRange(state);
+  
+  return {
+    startDate,
+    endDate,
+    timeByDay: state.timeByDay
+  }
+};
+
+export default withRouter(connect(mapStateToProps)(TimeTrackStats));

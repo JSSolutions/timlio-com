@@ -2,14 +2,9 @@ import 'rc-calendar/assets/index.css';
 import React, { Component } from 'react';
 import Calendar from 'rc-calendar';
 import DatePicker from 'rc-calendar/lib/Picker';
-import enUs from 'gregorian-calendar/lib/locale/en_US'; // spm error
 import DateTimeFormat from 'gregorian-calendar-format';
-import GregorianCalendar from 'gregorian-calendar';
 import CalendarLocale from 'rc-calendar/lib/locale/en_US';
 import 'rc-time-picker/assets/index.css';
-
-const now = new GregorianCalendar(enUs);
-now.setTime(Date.now());
 
 class Picker extends Component {
   render() {
@@ -17,7 +12,6 @@ class Picker extends Component {
     const formatter = new DateTimeFormat('E, MMM d yyyy');
     const calendar = (<Calendar
       locale={CalendarLocale}
-      defaultValue={now}
       formatter={formatter}
       timePicker={null}
       disabledDate={props.disabledDate}
@@ -50,25 +44,25 @@ Picker.defaultProps = {
 };
 
 class Interval extends Component {
-  disabledEndDate(endValue) {
-    if (!endValue) {
+  disabledEndDate(endDate) {
+    if (!endDate) {
       return false;
     }
-    const { startValue } = this.props;
-    if (!startValue) {
+    const { startDate } = this.props;
+    if (!startDate) {
       return false;
     }
-    return endValue.compareToDay(startValue) <= 0;
+    return endDate.compareToDay(startDate) <= 0;
   }
-  disabledStartDate(startValue) {
-    if (!startValue) {
+  disabledStartDate(startDate) {
+    if (!startDate) {
       return false;
     }
-    const { endValue } = this.props;
-    if (!endValue) {
+    const { endDate } = this.props;
+    if (!endDate) {
       return false;
     }
-    return startValue.compareToDay(endValue) >= 0;
+    return startDate.compareToDay(endDate) >= 0;
   }
   render() {
     const { onChange } = this.props;
@@ -76,13 +70,13 @@ class Interval extends Component {
       <div>
         <Picker
           disabledDate={this.disabledStartDate.bind(this)}
-          value={this.props.startValue}
-          onChange={onChange.bind(null, 'startValue')}
+          value={this.props.startDate}
+          onChange={onChange.bind(null, 'startDate')}
         />
         <Picker
           disabledDate={this.disabledEndDate.bind(this)}
-          value={this.props.endValue}
-          onChange={onChange.bind(null, 'endValue')}
+          value={this.props.endDate}
+          onChange={onChange.bind(null, 'endDate')}
         />
     </div>);
   }

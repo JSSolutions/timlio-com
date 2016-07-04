@@ -27,7 +27,7 @@ const DoughnutChart = (props) => {
       tooltipEl.removeClass('above below');
       tooltipEl.addClass(tooltip.yAlign);
 
-      const parts = tooltip.text.split(":");
+      const parts = tooltip.text.split(':');
       const innerHtml = `<span>${parts[0].trim()}</span> : <span><b>${millisecondsToTime(parts[1].trim())}</b></span>`;
       tooltipEl.html(innerHtml);
 
@@ -47,7 +47,8 @@ const DoughnutChart = (props) => {
     backgroundColor: 'black',
     color: 'white',
     borderRadius: '5px',
-    padding: '5px'
+    padding: '5px',
+    opacity: 0
   };
 
   return (

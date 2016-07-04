@@ -86,8 +86,8 @@ export const getUserBoardsTime = new ValidatedMethod({
   }
 });
 
-export const getUserTimeByDates = new ValidatedMethod({
-  name: 'TimeTrackEntries.getUserTimeByDates',
+export const getUserTimeByDay = new ValidatedMethod({
+  name: 'TimeTrackEntries.getUserTimeByDay',
 
   validate: new SimpleSchema([
     { startDate: { type: Date }, endDate: { type: Date }}, 

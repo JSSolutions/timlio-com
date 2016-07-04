@@ -1,6 +1,5 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import React, { Component } from 'react';
-import moment from 'moment';
 import { getUserCardsTime, getUserBoardsTime, getUserTimeByDates} from '../../api/time-track-entries/methods';
 import TimeSpendTable from '../components/TimeSpendTable';
 import TimeTrackStats from '../components/TimeTrackStats';
@@ -17,8 +16,9 @@ class Home extends Component {
   componentDidMount() {
     getUserBoardsTime.call({ userId: Meteor.userId() }, (err, result) => {
       const data = result.map((item) => {
+        const color = randomColor();
         return Object.assign(item, {
-          color: randomColor()
+          color
         });
       });
       

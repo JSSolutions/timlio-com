@@ -19,5 +19,14 @@ export const millisecondsToTime = (timestamp) => {
 };
 
 export const randomColor = () => {
-  return '#' + Math.floor(Math.random() * 16777215).toString(16);
+  const letters = '0123456789ABCDEF'.split('');
+  let color = '#';
+  for (let i = 0; i < 6; i++ ) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
+export const toUnderscore = (str) => {
+  return str.replace(/([A-Z])/g, ($1) => `_${$1.toLowerCase()}`);
 };
