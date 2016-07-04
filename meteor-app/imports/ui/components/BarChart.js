@@ -17,7 +17,7 @@ function getChartData(startValue, endValue, data) {
   const days = [];
   days.push(startTime);
   let tempDate = moment(startTime);
-  for(let i = 0; i <= diff; i++) {
+  for (let i = 0; i <= diff; i++) {
     tempDate.add(1, 'days');
     days.push(moment(tempDate));
   }
@@ -37,7 +37,7 @@ function getChartData(startValue, endValue, data) {
 
 const BarChart = (props) => {
   const { startDate, endDate, timeByDay } = props;
-  console.log(props);
+
   const days = getChartData(startDate, endDate, timeByDay);
   const data = _.pluck(days, 'time').map((dayTime) => 
     Math.random() * 10);
