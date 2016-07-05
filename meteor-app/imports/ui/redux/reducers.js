@@ -18,5 +18,5 @@ export default timeSpendByDay;
 
 export const getRange = (query) => ({
   startDate: query['start_date'] ? moment(query['start_date']) : moment().startOf('isoWeek'),
-  endDate: query['end_date'] ? moment(query['end_date']) : moment().endOf('isoWeek')
+  endDate: query['end_date'] ? moment(query['end_date']) : moment().endOf('isoWeek').subtract(1, 'days')
 });
