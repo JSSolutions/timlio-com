@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import TimeSpendTable from '../components/TimeSpendTable';
 import TimeTrackStats from '../components/TimeTrackStats';
 import DoughnutChart from '../components/DoughnutChart';
-import { randomColor } from '../helpers';
-import { getRange } from '../redux/reducers';
+import { randomColor, getInterval } from '../helpers';
 import { fetchTimeByDay, fetchTimeByBoard } from '../redux/actions';
 
 class Home extends Component {
@@ -15,7 +13,7 @@ class Home extends Component {
   }
   renderTimeTrackStats() {
     const { timeByDay, fetchTimeByDay } = this.props;
-    if (this.props.timeByDay) {
+    if (timeByDay) {
       return (
         <TimeTrackStats 
           fetchTimeByDay={fetchTimeByDay.bind(this)} 
@@ -54,7 +52,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch, { location }) => {
-  const { startDate, endDate } = getRange(location.query);
+  const { startDate, endDate } = getInterval(location.query);
   
   return {
     fetchTimeByDay() {
