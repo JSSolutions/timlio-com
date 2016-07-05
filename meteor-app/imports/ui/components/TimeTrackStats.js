@@ -7,6 +7,11 @@ import { withRouter } from 'react-router';
 import { toUnderscore } from '../helpers';
 
 class TimeTrackStats extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onChange = this.onChange.bind(this);
+  }
   onChange(field, value) {
     const { router, location, fetchTimeByDay } = this.props;
     const formatter = new DateTimeFormat('yyyy-MM-dd');
@@ -15,9 +20,7 @@ class TimeTrackStats extends Component {
       { [toUnderscore(field)]: formatter.format(value) }
     );
 
-    router.push({
-      query
-    });
+    router.push({ query });
     
     fetchTimeByDay();
   }
@@ -28,7 +31,7 @@ class TimeTrackStats extends Component {
     return (
       <div>
         <Calendar 
-          onChange={this.onChange.bind(this)} 
+          onChange={this.onChange}
           startDate={toGregorianCalendar(startDate)}
           endDate={toGregorianCalendar(endDate)}/>
         <BarChart 

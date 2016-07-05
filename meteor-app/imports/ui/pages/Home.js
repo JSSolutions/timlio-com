@@ -16,7 +16,7 @@ class Home extends Component {
     if (timeByDay) {
       return (
         <TimeTrackStats 
-          fetchTimeByDay={fetchTimeByDay.bind(this)} 
+          fetchTimeByDay={fetchTimeByDay}
           timeByDay={timeByDay}/>
       )
     }
@@ -45,9 +45,7 @@ const mapStateToProps = (state) => ({
   timeByDay: state.timeByDay,
   timeByBoard: state.timeByBoard && state.timeByBoard.map((time) => {
     const color = randomColor();
-    return Object.assign(time, {
-      color
-    });
+    return Object.assign(time, { color });
   })
 });
 
