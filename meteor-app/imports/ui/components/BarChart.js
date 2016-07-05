@@ -2,21 +2,12 @@ import React from 'react';
 import { Bar } from 'react-chartjs';
 import moment from 'moment';
 
-function random(length, max) {
-  let arr = [];
-  for(let i = 0; i < length; i++)
-    arr.push((Math.random() * max))
-  return arr;
-}
-
 function getChartData(startValue, endValue, data) {
-  const startTime = moment(startValue.getTime());
-  const endTime = moment(endValue.getTime());
-  const diff = endTime.diff(startTime, 'days');
+  const diff = endValue.diff(startValue, 'days');
 
   const days = [];
-  days.push(startTime);
-  let tempDate = moment(startTime);
+  days.push(startValue);
+  let tempDate = moment(startValue);
   for (let i = 0; i <= diff; i++) {
     tempDate.add(1, 'days');
     days.push(moment(tempDate));
@@ -24,6 +15,7 @@ function getChartData(startValue, endValue, data) {
   const format = 'ddd, MMM Do';
   
   return days.map((day) => {
+    day = moment(day);
     const found = data.find((item) => {
       const tempDay = moment([item.year, item.month - 1, item.day]);
       return tempDay.startOf('day').isSame(day.startOf('day'));
@@ -39,8 +31,8 @@ const BarChart = (props) => {
   const { startDate, endDate, timeByDay } = props;
 
   const days = getChartData(startDate, endDate, timeByDay);
-  const data = _.pluck(days, 'time').map((dayTime) => 
-    Math.random() * 10);
+  const data = _.pluck(days, 'time').map((dayTime) =>
+    dayTime / 1000 / 3600);
   const chartData = {
     labels: _.pluck(days, 'format'),
     datasets: [
@@ -58,6 +50,7 @@ const BarChart = (props) => {
     responsive: true,
     barStrokeWidth: 1
   };
+  
   return (
     <Bar data={chartData} options={chartOptions} width="860" height="550" redraw/>
   )

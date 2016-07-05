@@ -3,7 +3,6 @@ import { millisecondsToTime } from '../helpers';
 
 export default class TimeSpendTable extends Component {
   render() {
-    const { data } = this.props;
     const divColorStyle = {
       width: '10px',
       height: '10px',
@@ -22,7 +21,7 @@ export default class TimeSpendTable extends Component {
             </tr>
           </thead>
           <tbody>
-          {data.map((obj, i) =>
+          {this.props.timeByBoard.map((obj, i) =>
             <tr key={i}>
               <td>{obj.name}</td>
               <td><div style={

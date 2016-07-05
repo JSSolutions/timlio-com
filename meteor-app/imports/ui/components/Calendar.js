@@ -65,17 +65,17 @@ class Interval extends Component {
     return startDate.compareToDay(endDate) >= 0;
   }
   render() {
-    const { onChange } = this.props;
+    const { onChange, startDate, endDate } = this.props;
     return (
       <div>
         <Picker
           disabledDate={this.disabledStartDate.bind(this)}
-          value={this.props.startDate}
+          value={startDate}
           onChange={onChange.bind(null, 'startDate')}
         />
         <Picker
           disabledDate={this.disabledEndDate.bind(this)}
-          value={this.props.endDate}
+          value={endDate}
           onChange={onChange.bind(null, 'endDate')}
         />
     </div>);

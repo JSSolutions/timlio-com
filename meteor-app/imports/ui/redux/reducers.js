@@ -9,21 +9,14 @@ const timeSpendByDay = (state = [], action) => {
       return Object.assign({}, state, { timeByDay: action.timeByDay });
     default:
       return state;
+    case ActionTypes.RECEIVE_TIME_BY_BOARD:
+      return Object.assign({}, state, { timeByBoard: action.timeByBoard });
   }
 };
 
 export default timeSpendByDay;
 
-export const getRange = (state) => {
-  
-  const startDate = new GregorianCalendar(enUS);
-  startDate.setTime(moment().startOf('isoWeek'));
-  
-  const endDate = new GregorianCalendar(enUS);
-  endDate.setTime(moment().endOf('isoWeek'));
-
-  return {
-    startDate,
-    endDate
-  };
-};
+export const getRange = (query) => ({
+  startDate: query['start_date'] ? moment(query['start_date']) : moment().startOf('isoWeek'),
+  endDate: query['end_date'] ? moment(query['end_date']) : moment().endOf('isoWeek')
+});

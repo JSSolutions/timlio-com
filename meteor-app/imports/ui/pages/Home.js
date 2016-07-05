@@ -1,48 +1,69 @@
-import { createContainer } from 'meteor/react-meteor-data';
 import React, { Component } from 'react';
-import { getUserCardsTime, getUserBoardsTime, getUserTimeByDates} from '../../api/time-track-entries/methods';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import TimeSpendTable from '../components/TimeSpendTable';
 import TimeTrackStats from '../components/TimeTrackStats';
 import DoughnutChart from '../components/DoughnutChart';
 import { randomColor } from '../helpers';
+import { getRange } from '../redux/reducers';
+import { fetchTimeByDay, fetchTimeByBoard } from '../redux/actions';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: []
-    };
-  }
   componentDidMount() {
-    getUserBoardsTime.call({ userId: Meteor.userId() }, (err, result) => {
-      const data = result.map((item) => {
-        const color = randomColor();
-        return Object.assign(item, {
-          color
-        });
-      });
-      
-      this.setState({
-        data
-      })
-    });
+    this.props.fetchTimeByBoard();
+    this.props.fetchTimeByDay();
   }
-  
+  renderTimeTrackStats() {
+    const { timeByDay, fetchTimeByDay } = this.props;
+    if (this.props.timeByDay) {
+      return (
+        <TimeTrackStats 
+          fetchTimeByDay={fetchTimeByDay.bind(this)} 
+          timeByDay={timeByDay}/>
+      )
+    }
+  }
+  renderDetailedInfo() {
+    if (this.props.timeByBoard) {
+      return (
+        <div>
+          <TimeSpendTable timeByBoard={this.props.timeByBoard}/>
+          <DoughnutChart timeByBoard={this.props.timeByBoard}/>
+        </div>
+      )
+    }
+  }
   render() {
     return (
       <div>
-        <TimeTrackStats/>
-        <TimeSpendTable {...this.state}/>
-        <DoughnutChart {...this.state}/>
+        {this.renderTimeTrackStats()}
+        {this.renderDetailedInfo()}
       </div>
     )
   }
 }
 
-export default createContainer(() => {
-  const cardsHandle = Meteor.subscribe('cards');
-  const loading = !cardsHandle.ready();
+const mapStateToProps = (state) => ({
+  timeByDay: state.timeByDay,
+  timeByBoard: state.timeByBoard && state.timeByBoard.map((time) => {
+    const color = randomColor();
+    return Object.assign(time, {
+      color
+    });
+  })
+});
+
+const mapDispatchToProps = (dispatch, { location }) => {
+  const { startDate, endDate } = getRange(location.query);
+  
   return {
-    loading
+    fetchTimeByDay() {
+      dispatch(fetchTimeByDay(startDate, endDate, Meteor.userId()));
+    },
+    fetchTimeByBoard() {
+      dispatch(fetchTimeByBoard(Meteor.userId()));
+    }
   }
-}, Home);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,12 +1,9 @@
 import React from 'react';
-import Chart, { Doughnut } from 'react-chartjs';
+import { Doughnut } from 'react-chartjs';
 import { millisecondsToTime } from '../helpers';
 
-
 const DoughnutChart = (props) => {
-  const { data } = props;
-
-  const chartData = data.map((item) => {
+  const chartData = props.timeByBoard.map((item) => {
     return {
       value: item.time,
       color: item.color,
