@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Bar } from 'react-chartjs';
 import moment from 'moment';
 
@@ -8,7 +8,7 @@ function getChartData(startValue, endValue, data) {
   const days = [];
   days.push(startValue);
   let tempDate = moment(startValue);
-  for (let i = 0; i <= diff; i++) {
+  for (let i = 0; i < diff; i++) {
     tempDate.add(1, 'days');
     days.push(moment(tempDate));
   }
@@ -27,33 +27,40 @@ function getChartData(startValue, endValue, data) {
   });
 }
 
-const BarChart = (props) => {
-  const { startDate, endDate, timeByDay } = props;
+export default class BarChart extends Component {
+  shouldComponentUpdate(nextProps) {
+    return nextProps.timeByDay !== this.props.timeByDay;
+  }
+  render() {
+    const { startDate, endDate, timeByDay } = this.props;
 
-  const days = getChartData(startDate, endDate, timeByDay);
-  const data = _.pluck(days, 'time').map((dayTime) =>
+    const days = getChartData(startDate, endDate, timeByDay);
+    const data = _.pluck(days, 'time').map((dayTime) =>
     dayTime / 1000 / 3600);
-  const chartData = {
-    labels: _.pluck(days, 'format'),
-    datasets: [
-      {
-        data,
-        fillColor: 'rgba(255,150,132,0.2)',
-        strokeColor: 'rgba(255,99,131,0.8)',
-        highlightFill: 'rgba(255,99,132,0.4)',
-        highlightStroke: 'rgba(255,99,132,1)'
-      }
-    ]
-  };
+    
+    const chartData = {
+      labels: _.pluck(days, 'format'),
+      datasets: [
+        {
+          data,
+          fillColor: 'rgba(255,150,132,0.2)',
+          strokeColor: 'rgba(255,99,131,0.8)',
+          highlightFill: 'rgba(255,99,132,0.4)',
+          highlightStroke: 'rgba(255,99,132,1)'
+        }
+      ]
+    };
 
-  const chartOptions = {
-    responsive: true,
-    barStrokeWidth: 1
-  };
-  
-  return (
-    <Bar data={chartData} options={chartOptions} width="860" height="550" redraw/>
-  )
-};
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      barStrokeWidth: 1
+    };
 
-export default BarChart;
+    return (
+      <div className="row" style={{height: 450}}>
+        <Bar data={chartData} options={chartOptions} redraw/>
+      </div>
+    )
+  }
+}

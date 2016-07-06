@@ -3,23 +3,21 @@ import { connect } from 'react-redux';
 import TimeSpendTable from '../components/TimeSpendTable';
 import TimeTrackStats from '../components/TimeTrackStats';
 import DoughnutChart from '../components/DoughnutChart';
-import { randomColor, getInterval } from '../helpers';
+import { randomColor } from '../helpers';
 import { fetchTimeByDay, fetchTimeByBoard } from '../redux/actions';
 
 class Home extends Component {
   componentDidMount() {
-    this.props.fetchTimeByBoard();
-    this.props.fetchTimeByDay();
+    const { fetchTimeByBoard } = this.props;
+    fetchTimeByBoard();
   }
   renderTimeTrackStats() {
     const { timeByDay, fetchTimeByDay } = this.props;
-    if (timeByDay) {
       return (
         <TimeTrackStats 
           fetchTimeByDay={fetchTimeByDay}
           timeByDay={timeByDay}/>
       )
-    }
   }
   renderDetailedInfo() {
     if (this.props.timeByBoard) {
@@ -41,20 +39,18 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  timeByDay: state.timeByDay,
-  timeByBoard: state.timeByBoard && state.timeByBoard.map((time) => {
+const mapStateToProps = ({ timeSpend }) => ({
+  timeByDay: timeSpend.timeByDay,
+  timeByBoard: timeSpend.timeByBoard && timeSpend.timeByBoard.map((time) => {
     const color = randomColor();
     return Object.assign(time, { color });
   })
 });
 
-const mapDispatchToProps = (dispatch, { location }) => {
-  const { startDate, endDate } = getInterval(location.query);
-  
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTimeByDay() {
-      dispatch(fetchTimeByDay(startDate, endDate, Meteor.userId()));
+    fetchTimeByDay(startDate, endDate, userId) {
+      dispatch(fetchTimeByDay(startDate, endDate, userId));
     },
     fetchTimeByBoard() {
       dispatch(fetchTimeByBoard(Meteor.userId()));

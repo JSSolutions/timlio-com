@@ -16,6 +16,11 @@ export const receiveTimeByCard = (timeByCard) => ({
   timeByCard
 });
 
+export const setUsers = (users) => ({
+  type: ActionTypes.SET_USERS,
+  users
+});
+
 export const fetchTimeByDay = (startDate, endDate, userId) => (dispatch) => {
   startDate = new Date(startDate);
   endDate = new Date(endDate);
