@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import BarChart from './BarChart';
 import Calendar from './Calendar';
 import UsersFilter from './UsersFilter';
+import BoardsFilter from './BoardsFilter';
 import DateTimeFormat from 'gregorian-calendar-format';
-import { toGregorianCalendar, getDatesQuery, getInterval } from '../helpers';
+import { toGregorianCalendar, getInterval } from '../helpers';
 import { withRouter } from 'react-router';
 
 class TimeTrackStats extends Component {
@@ -44,9 +45,10 @@ class TimeTrackStats extends Component {
           <Calendar
             onChange={this.onDateChange}
             value={[toGregorianCalendar(startDate), toGregorianCalendar(endDate)]}/>
-
-          <UsersFilter/>
-            
+          <div className="row margin-bottom">
+            <UsersFilter/>
+            <BoardsFilter/>
+          </div>
           <BarChart
             timeByDay={timeByDay}
             startDate={startDate}

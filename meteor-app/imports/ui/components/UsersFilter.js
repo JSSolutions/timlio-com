@@ -11,6 +11,7 @@ class UsersFilter extends Component {
     this.onChange = this.onChange.bind(this);
   }
   onChange(selectedUsers) {
+    
     this.props.dispatch(setUsers(selectedUsers || []));
   }
   render() {

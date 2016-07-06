@@ -57,12 +57,12 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
           day: { $dayOfMonth: '$startDate' },
           year: { $year: '$startDate' },
           month: { $month: '$startDate' },
-          timeSpent: { $subtract: ['$stopDate', '$startDate'] }
+          timeSpend: { $subtract: ['$stopDate', '$startDate'] }
         }
       },
       { $group: {
           _id: { day: '$day', year: '$year', month: '$month' },
-          time: { $sum: '$timeSpent' }
+          time: { $sum: '$timeSpend' }
         }
       },
       { $project: {

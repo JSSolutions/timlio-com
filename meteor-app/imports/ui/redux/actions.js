@@ -21,6 +21,11 @@ export const setUsers = (users) => ({
   users
 });
 
+export const setBoards = (boards) => ({
+  type: ActionTypes.SET_BOARDS,
+  boards
+});
+
 export const fetchTimeByDay = (startDate, endDate, userId) => (dispatch) => {
   startDate = new Date(startDate);
   endDate = new Date(endDate);

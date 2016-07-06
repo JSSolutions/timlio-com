@@ -21,8 +21,17 @@ const selectedUsers = (state = [], action) => {
   }
 };
 
+const selectedBoards = (state = [], action) => {
+  switch (action.type) {
+    case ActionTypes.SET_BOARDS:
+      return action.boards;
+    default:
+      return state;
+  }
+};
 
 export default combineReducers({
   timeSpend,
-  selectedUsers
+  selectedUsers,
+  selectedBoards
 });

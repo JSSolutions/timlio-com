@@ -15,7 +15,6 @@ function getChartData(startValue, endValue, data) {
   const format = 'ddd, MMM Do';
   
   return days.map((day) => {
-    day = moment(day);
     const found = data.find((item) => {
       const tempDay = moment([item.year, item.month - 1, item.day]);
       return tempDay.startOf('day').isSame(day.startOf('day'));
@@ -58,7 +57,7 @@ export default class BarChart extends Component {
     };
 
     return (
-      <div className="row" style={{height: 450}}>
+      <div className="row" style={{height: 375}}>
         <Bar data={chartData} options={chartOptions} redraw/>
       </div>
     )
