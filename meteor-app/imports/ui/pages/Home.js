@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import TimeSpendTable from '../components/TimeSpendTable';
 import TimeTrackStats from '../components/TimeTrackStats';
 import DoughnutChart from '../components/DoughnutChart';
-import { randomColor } from '../helpers';
 import { fetchTimeByDay, fetchTimeByBoard } from '../redux/actions';
 
 class Home extends Component {
@@ -22,9 +21,13 @@ class Home extends Component {
   renderDetailedInfo() {
     if (this.props.timeByBoard) {
       return (
-        <div>
-          <TimeSpendTable timeByBoard={this.props.timeByBoard}/>
-          <DoughnutChart timeByBoard={this.props.timeByBoard}/>
+        <div className="row">
+          <div className="col-sm-6">
+            <TimeSpendTable timeByBoard={this.props.timeByBoard}/>
+          </div>
+          <div className="col-sm-6">
+            <DoughnutChart timeByBoard={this.props.timeByBoard}/>
+          </div>
         </div>
       )
     }
@@ -41,10 +44,7 @@ class Home extends Component {
 
 const mapStateToProps = ({ timeSpend }) => ({
   timeByDay: timeSpend.timeByDay,
-  timeByBoard: timeSpend.timeByBoard && timeSpend.timeByBoard.map((time) => {
-    const color = randomColor();
-    return Object.assign(time, { color });
-  })
+  timeByBoard: timeSpend.timeByBoard
 });
 
 const mapDispatchToProps = (dispatch) => {

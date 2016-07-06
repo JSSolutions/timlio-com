@@ -57,7 +57,7 @@ export default class BarChart extends Component {
     };
 
     return (
-      <div className="row" style={{height: 375}}>
+      <div className="row margin-bottom" style={{height: 375}}>
         <Bar data={chartData} options={chartOptions} redraw/>
       </div>
     )
