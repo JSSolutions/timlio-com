@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import TimeTrackService from './time-track-entries-service';
-import { CardIdSchema, IdSchema, BoardIdSchema, ListIdSchema, NameSchema, UserIdSchema } from '../schemas';
+import { CardIdSchema, IdSchema, BoardIdSchema, ListIdSchema, NameSchema, UserIdSchema, idSchemaDoc } from '../schemas';
 import ListsService from '../lists/lists-service';
 import BoardsService from '../boards/boards-service';
 import CardsService from '../cards/cards-service';
@@ -89,11 +89,15 @@ export const getUserBoardsTime = new ValidatedMethod({
 export const getUserTimeByDay = new ValidatedMethod({
   name: 'TimeTrackEntries.getUserTimeByDay',
 
-  validate: new SimpleSchema([
-    { startDate: { type: Date }, endDate: { type: Date }}, 
-    UserIdSchema]).validator(),
+  validate: new SimpleSchema(
+    { 
+      startDate: { type: Date }, 
+      endDate: { type: Date },
+      userIds: { type: [idSchemaDoc] },
+      boardIds: { type: [idSchemaDoc] }
+    }).validator(),
 
-  run({ startDate, endDate, userId }) {
+  run({ startDate, endDate, userIds, boardIds }) {
     if (!this.userId) {
       throw new Meteor.Error(
         403, 'Unauthorized user'
@@ -104,6 +108,6 @@ export const getUserTimeByDay = new ValidatedMethod({
       return;
     }
 
-    return TimeTrackService.betweenDates(startDate, endDate, userId);
+    return TimeTrackService.betweenDates(startDate, endDate, userIds, boardIds);
   }
 });

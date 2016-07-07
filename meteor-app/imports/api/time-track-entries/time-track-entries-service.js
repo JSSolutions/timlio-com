@@ -22,7 +22,8 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
   },
   timeOnBoards(userId) {
     const pipeline = [
-      { $lookup: {
+      { 
+        $lookup: {
           from: 'cards',
           localField: '_id',
           foreignField: 'boardId',
@@ -30,7 +31,8 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
         }
       },
       { $unwind: '$cards' },
-      { $lookup: {
+      { 
+        $lookup: {
           from: 'timeTrackEntries',
           localField: 'cards._id',
           foreignField: 'cardId',
@@ -45,27 +47,49 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
 
     return Boards.aggregate(pipeline); 
   },
-  betweenDates(start, end, userId) {
+  betweenDates(start, end, userIds, boardIds) {
     const pipeline = [
-      { $match: {
-          userId,
+      { 
+        $match: Object.assign({
           startDate: { $gte: start },
           stopDate: { $lt: end }
+        }, { userId: userIds && userIds.length ? { $in: userIds } : { $exists: true } })
+      },
+      { 
+        $lookup: {
+          from: 'cards',
+          localField: 'cardId',
+          foreignField: '_id',
+          as: 'cards'
         }
       },
-      { $project: {
+      { $unwind: '$cards' },
+      {
+        $lookup: {
+          from: 'boards',
+          localField: 'cards.boardId',
+          foreignField: '_id',
+          as: 'boards'
+        }
+      },
+      { $unwind: '$boards' },
+      { $match: { 'boards._id': boardIds && boardIds.length ? { $in: boardIds } : { $exists: true }}},
+      { 
+        $project: {
           day: { $dayOfMonth: '$startDate' },
           year: { $year: '$startDate' },
           month: { $month: '$startDate' },
-          timeSpend: { $subtract: ['$stopDate', '$startDate'] }
+          timeSpend: { $subtract: ['$stopDate', '$startDate']}
         }
       },
-      { $group: {
+      { 
+        $group: {
           _id: { day: '$day', year: '$year', month: '$month' },
           time: { $sum: '$timeSpend' }
         }
       },
-      { $project: {
+      { 
+        $project: {
           _id: 0,
           day: '$_id.day', 
           year: '$_id.year', 
@@ -74,7 +98,7 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
         }
       }
     ];
-    
+
     return this.collection.aggregate(pipeline);
   }
 });
