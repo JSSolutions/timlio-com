@@ -1,61 +1,65 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Bar } from 'react-chartjs';
 import moment from 'moment';
 
-function random(length, max) {
-  let arr = [];
-  for(let i = 0; i < length; i++)
-    arr.push((Math.random() * max))
-  return arr;
-}
-
-function getDaysBetween(startValue, endValue) {
-  const startTime = moment(startValue.getTime());
-  const endTime = moment(endValue.getTime());
-  const diff = endTime.diff(startTime, 'days');
+function getChartData(startValue, endValue, data) {
+  const diff = endValue.diff(startValue, 'days');
 
   const days = [];
-  const format = 'ddd, MMM Do YYYY';
-  days.push(startTime.format(format));
-
-  for(let i = 0; i < diff; i++) {
-    startTime.add(1, 'days');
-    days.push(startTime.format(format));
+  days.push(startValue);
+  let tempDate = moment(startValue);
+  for (let i = 0; i < diff; i++) {
+    tempDate.add(1, 'days');
+    days.push(moment(tempDate));
   }
-
-  return days;
+  const format = 'ddd, MMM Do';
+  
+  return days.map((day) => {
+    const found = data.find((item) => {
+      const tempDay = moment([item.year, item.month - 1, item.day]);
+      return tempDay.startOf('day').isSame(day.startOf('day'));
+    });
+    return {
+      format: day.format(format),
+      time: found ? found.time : 0
+    }
+  });
 }
 
-const BarChart = (props) => {
-  const days = getDaysBetween(props.startValue, props.endValue);
-  const chartData = {
-    labels: days,
-    datasets: [
-      {
-        label: 'My First dataset',
-        fillColor: 'rgba(255,150,132,0.2)',
-        strokeColor: 'rgba(255,99,131,0.8)',
-        data: random(days.length, 24),
-        highlightFill: 'rgba(255,99,132,0.4)',
-        highlightStroke: 'rgba(255,99,132,1)'
-      }
-    ]
-  };
+export default class BarChart extends Component {
+  shouldComponentUpdate(nextProps) {
+    return nextProps.timeByDay !== this.props.timeByDay;
+  }
+  render() {
+    const { startDate, endDate, timeByDay } = this.props;
 
-  const chartOptions = {
-    barStrokeWidth: 1,
-    scales: {
-      xAxes: [{
-        stacked: true
-      }],
-      yAxes: [{
-        stacked: true
-      }]
-    }
-  };
-  return (
-    <Bar data={chartData} options={chartOptions} width="860" height="550" redraw/>
-  )
-};
+    const days = getChartData(startDate, endDate, timeByDay);
+    const data = _.pluck(days, 'time').map((dayTime) =>
+    dayTime / 1000 / 3600);
+    
+    const chartData = {
+      labels: _.pluck(days, 'format'),
+      datasets: [
+        {
+          data,
+          fillColor: 'rgba(255,150,132,0.2)',
+          strokeColor: 'rgba(255,99,131,0.8)',
+          highlightFill: 'rgba(255,99,132,0.4)',
+          highlightStroke: 'rgba(255,99,132,1)'
+        }
+      ]
+    };
 
-export default BarChart;
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      barStrokeWidth: 1
+    };
+
+    return (
+      <div className="row margin-bottom" style={{height: 375}}>
+        <Bar data={chartData} options={chartOptions} redraw/>
+      </div>
+    )
+  }
+}

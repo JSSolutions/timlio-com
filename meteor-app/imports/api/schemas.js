@@ -56,7 +56,7 @@ const trelloIdSchemaDoc = {
   regEx: TrelloRegExId
 };
 
-const idSchemaDoc = {
+export const idSchemaDoc = {
   type: String,
   regEx: SimpleSchema.RegEx.Id
 };

@@ -1,91 +1,59 @@
 import 'rc-calendar/assets/index.css';
+import './Calendar.css';
 import React, { Component } from 'react';
-import Calendar from 'rc-calendar';
+import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import DatePicker from 'rc-calendar/lib/Picker';
-import enUs from 'gregorian-calendar/lib/locale/en_US'; // spm error
 import DateTimeFormat from 'gregorian-calendar-format';
-import GregorianCalendar from 'gregorian-calendar';
 import CalendarLocale from 'rc-calendar/lib/locale/en_US';
-import 'rc-time-picker/assets/index.css';
 
-const now = new GregorianCalendar(enUs);
-now.setTime(Date.now());
+const formatter = new DateTimeFormat('E, MMM d yyyy');
 
-class Picker extends Component {
+function isValidRange(v) {
+  return v && v[0] && v[1];
+}
+function format(v) {
+  return v ? formatter.format(v) : '';
+}
+
+class Interval extends Component {
   render() {
     const props = this.props;
-    const formatter = new DateTimeFormat('E, MMM d yyyy');
-    const calendar = (<Calendar
+
+    const calendar = (<RangeCalendar
+      showWeekNumber={false}
       locale={CalendarLocale}
-      defaultValue={now}
       formatter={formatter}
-      timePicker={null}
-      disabledDate={props.disabledDate}
+      showOk={false}
     />);
+
     return (<DatePicker
       animation="slide-up"
-      disabled={props.disabled}
       calendar={calendar}
       value={props.value}
       onChange={props.onChange}
     >
       {({ value }) => {
         return (
-          <span>
-            <input
-              style={{ width: 250, textAlign: 'center' }}
-              disabled={props.disabled}
-              readOnly
-              value={value && formatter.format(value) || ''}
-            />
-          </span>
-        );
+          <div className="row margin-bottom">
+            <div className="col-sm-4">
+              <div className="input-group">
+                <input
+                  disabled={props.disabled}
+                  readOnly
+                  className="form-control"
+                  value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}`}
+                />
+                <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"></i></div>
+              </div>
+            </div>
+          </div>);
       }}
     </DatePicker>);
   }
 }
 
-Picker.defaultProps = {
+Interval.defaultProps = {
   disabled: false
 };
-
-class Interval extends Component {
-  disabledEndDate(endValue) {
-    if (!endValue) {
-      return false;
-    }
-    const { startValue } = this.props;
-    if (!startValue) {
-      return false;
-    }
-    return endValue.compareToDay(startValue) <= 0;
-  }
-  disabledStartDate(startValue) {
-    if (!startValue) {
-      return false;
-    }
-    const { endValue } = this.props;
-    if (!endValue) {
-      return false;
-    }
-    return startValue.compareToDay(endValue) >= 0;
-  }
-  render() {
-    const { onChange } = this.props;
-    return (
-      <div>
-        <Picker
-          disabledDate={this.disabledStartDate.bind(this)}
-          value={this.props.startValue}
-          onChange={onChange.bind(null, 'startValue')}
-        />
-        <Picker
-          disabledDate={this.disabledEndDate.bind(this)}
-          value={this.props.endValue}
-          onChange={onChange.bind(null, 'endValue')}
-        />
-    </div>);
-  }
-}
 
 export default Interval;

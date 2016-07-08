@@ -23,7 +23,7 @@ export function setTimeTrack(payload) {
   }
 }
 
-function stopTimerIfRunning({ timeTrackId, timerId }) {
+export function stopTimerIfRunning({ timeTrackId, timerId }) {
   if (timeTrackId) {
     clearInterval(timerId);
     
