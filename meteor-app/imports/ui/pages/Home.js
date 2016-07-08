@@ -1,48 +1,61 @@
-import { createContainer } from 'meteor/react-meteor-data';
 import React, { Component } from 'react';
-import moment from 'moment';
-import { getUserCardsTime, getUserBoardsTime, getUserTimeByDates} from '../../api/time-track-entries/methods';
+import { connect } from 'react-redux';
 import TimeSpendTable from '../components/TimeSpendTable';
 import TimeTrackStats from '../components/TimeTrackStats';
 import DoughnutChart from '../components/DoughnutChart';
 import { randomColor } from '../helpers';
+import { fetchTimeByDay, fetchTimeByBoard } from '../redux/actions';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: []
-    };
-  }
   componentDidMount() {
-    getUserBoardsTime.call({ userId: Meteor.userId() }, (err, result) => {
-      const data = result.map((item) => {
-        return Object.assign(item, {
-          color: randomColor()
-        });
-      });
-      
-      this.setState({
-        data
-      })
-    });
+    const { fetchTimeByBoard } = this.props;
+    fetchTimeByBoard();
   }
-  
+  renderTimeTrackStats() {
+    const { timeByDay, fetchTimeByDay } = this.props;
+      return (
+        <TimeTrackStats 
+          fetchTimeByDay={fetchTimeByDay}
+          timeByDay={timeByDay}/>
+      )
+  }
+  renderDetailedInfo() {
+    if (this.props.timeByBoard) {
+      return (
+        <div>
+          <TimeSpendTable timeByBoard={this.props.timeByBoard}/>
+          <DoughnutChart timeByBoard={this.props.timeByBoard}/>
+        </div>
+      )
+    }
+  }
   render() {
     return (
       <div>
-        <TimeTrackStats/>
-        <TimeSpendTable {...this.state}/>
-        <DoughnutChart {...this.state}/>
+        {this.renderTimeTrackStats()}
+        {this.renderDetailedInfo()}
       </div>
     )
   }
 }
 
-export default createContainer(() => {
-  const cardsHandle = Meteor.subscribe('cards');
-  const loading = !cardsHandle.ready();
+const mapStateToProps = ({ timeSpend }) => ({
+  timeByDay: timeSpend.timeByDay,
+  timeByBoard: timeSpend.timeByBoard && timeSpend.timeByBoard.map((time) => {
+    const color = randomColor();
+    return Object.assign(time, { color });
+  })
+});
+
+const mapDispatchToProps = (dispatch) => {
   return {
-    loading
+    fetchTimeByDay(startDate, endDate, userId) {
+      dispatch(fetchTimeByDay(startDate, endDate, userId));
+    },
+    fetchTimeByBoard() {
+      dispatch(fetchTimeByBoard(Meteor.userId()));
+    }
   }
-}, Home);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,0 +1,9 @@
+.form-control {
+  height: 36px;
+}
+.form-control[readonly] {
+  background-color: white;
+}
+.filters {
+  margin-bottom: 20px;
+}

@@ -1,12 +1,9 @@
 import React from 'react';
-import Chart, { Doughnut } from 'react-chartjs';
+import { Doughnut } from 'react-chartjs';
 import { millisecondsToTime } from '../helpers';
 
-
 const DoughnutChart = (props) => {
-  const { data } = props;
-
-  const chartData = data.map((item) => {
+  const chartData = props.timeByBoard.map((item) => {
     return {
       value: item.time,
       color: item.color,
@@ -27,7 +24,7 @@ const DoughnutChart = (props) => {
       tooltipEl.removeClass('above below');
       tooltipEl.addClass(tooltip.yAlign);
 
-      const parts = tooltip.text.split(":");
+      const parts = tooltip.text.split(':');
       const innerHtml = `<span>${parts[0].trim()}</span> : <span><b>${millisecondsToTime(parts[1].trim())}</b></span>`;
       tooltipEl.html(innerHtml);
 
@@ -47,7 +44,8 @@ const DoughnutChart = (props) => {
     backgroundColor: 'black',
     color: 'white',
     borderRadius: '5px',
-    padding: '5px'
+    padding: '5px',
+    opacity: 0
   };
 
   return (

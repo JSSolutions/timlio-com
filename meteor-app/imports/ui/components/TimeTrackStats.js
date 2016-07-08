@@ -1,53 +1,66 @@
 import React, { Component } from 'react';
-import GregorianCalendar from 'gregorian-calendar';
-import enUS from 'gregorian-calendar/lib/locale/en_US';
-import moment from 'moment';
 import BarChart from './BarChart';
 import Calendar from './Calendar';
-import { getUserTimeByDates } from '../../api/time-track-entries/methods';
+import UsersFilter from './UsersFilter';
+import BoardsFilter from './BoardsFilter';
+import DateTimeFormat from 'gregorian-calendar-format';
+import { toGregorianCalendar, getInterval } from '../helpers';
+import { withRouter } from 'react-router';
 
-export default class TimeTrackStats extends Component {
+class TimeTrackStats extends Component {
   constructor(props) {
     super(props);
-    
-    const endValue = new GregorianCalendar(enUS);
-    endValue.setTime(new Date());
-    
-    const startValue = new GregorianCalendar(enUS);
-    startValue.setTime(moment().subtract(6, 'days'));
 
-    this.state = {
-      startValue,
-      endValue
-    };
+    this.onDateChange = this.onDateChange.bind(this);
   }
   componentDidMount() {
-    getUserTimeByDates.call({
-      startDate: new Date(this.state.startValue.getTime()), endDate: new Date(this.state.endValue.getTime()), userId: Meteor.userId()
-    }, (err, result) => {
-      if (err) {
-        throw err;
-      }
-      
-      this.setState(Object.assign({}, this.state, { data: result }));
-    });
+    const { location } = this.props;
+    this.fetchData(location);
   }
-  onChange(field, value) {
-    this.setState({
-      [field]: value
-    });
-  }
-  renderChart() {
-    if (this.state.data) {
-      return (<BarChart {...this.state}/>);
+  componentWillReceiveProps({ location }) {
+    if (this.props.location.query !== location.query) {
+      this.fetchData(location)
     }
   }
+  fetchData({ query }) {
+    const { startDate, endDate } = getInterval(query);
+    this.props.fetchTimeByDay(startDate, endDate, Meteor.userId());
+  }
+  onDateChange(value) {
+    const { router } = this.props;
+    const formatter = new DateTimeFormat('yyyy-MM-dd');
+    const query = {
+      'date': formatter.format(value[0]),
+      'end_date': formatter.format(value[1])
+    };
+    router.push({ query })
+  }
   render() {
-    return (
-      <div>
-        <Calendar onChange={this.onChange.bind(this)} {...this.state}/>
-        {this.renderChart()}
-      </div>
-    )
+    const { timeByDay, location } = this.props;
+    const { startDate, endDate } = getInterval(location.query);
+    
+    if (timeByDay) {
+      return (
+        <div>
+          <Calendar
+            onChange={this.onDateChange}
+            value={[toGregorianCalendar(startDate), toGregorianCalendar(endDate)]}/>
+          <div className="row margin-bottom">
+            <UsersFilter/>
+            <BoardsFilter/>
+          </div>
+          <BarChart
+            timeByDay={timeByDay}
+            startDate={startDate}
+            endDate={endDate}/>
+        </div>
+      )
+    } else {
+      return (
+        <div>Loading...</div>
+      )
+    }
   }
 }
+
+export default withRouter(TimeTrackStats);

@@ -12,4 +12,4 @@ const renderRoutes = () => (
   </Router>
 );
 
-render(renderRoutes(), document.getElementById('app'));
+export default renderRoutes;
