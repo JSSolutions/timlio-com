@@ -10,6 +10,10 @@
     "react-addons-pure-render-mixin": "^15.1.0",
     "react-chartjs": "^0.7.3",
     "react-dom": "^15.0.2",
-    "react-router": "^2.4.1"
+    "react-router": "^2.4.1",
+    "rc-calendar": "latest",
+    "gregorian-calendar-format": "latest",
+    "gregorian-calendar": "latest",
+    "moment": "latest"
   }
 }

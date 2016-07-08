@@ -18,9 +18,14 @@ export default class MainLayout extends Component {
               <div className="navbar-brand">Timlio</div>
             </div>
             <div className="collapse navbar-collapse">
-              <ul className="nav navbar-nav navbar-right">
-                <li><a onClick={this.loginOnClick} href="#">Login</a></li>
-              </ul>
+              {() => {
+                if (Meteor.userId()) {
+                  return (
+                    <ul className="nav navbar-nav navbar-right">
+                      <li><a onClick={this.loginOnClick} href="#">Login</a></li>
+                    </ul>
+                  )}
+              }}
             </div>
           </div>
         </nav>

@@ -1,37 +1,48 @@
+import { createContainer } from 'meteor/react-meteor-data';
 import React, { Component } from 'react';
-import { render } from 'react-dom';
-import BarChart from '../components/BarChart';
-import Calendar from '../components/Calendar';
-import GregorianCalendar from 'gregorian-calendar';
-import enUS from 'gregorian-calendar/lib/locale/en_US';
 import moment from 'moment';
+import { getUserCardsTime, getUserBoardsTime, getUserTimeByDates} from '../../api/time-track-entries/methods';
+import TimeSpendTable from '../components/TimeSpendTable';
+import TimeTrackStats from '../components/TimeTrackStats';
+import DoughnutChart from '../components/DoughnutChart';
+import { randomColor } from '../helpers';
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    const endValue = new GregorianCalendar(enUS);
-    endValue.setTime(new Date());
-    const startValue = new GregorianCalendar(enUS);
-    startValue.setTime(moment().subtract(6, 'days'));
-
     this.state = {
-      startValue,
-      endValue
+      data: []
     };
   }
-  onChange(field, value) {
-    this.setState({
-      [field]: value
+  componentDidMount() {
+    getUserBoardsTime.call({ userId: Meteor.userId() }, (err, result) => {
+      const data = result.map((item) => {
+        return Object.assign(item, {
+          color: randomColor()
+        });
+      });
+      
+      this.setState({
+        data
+      })
     });
   }
+  
   render() {
     return (
       <div>
-        <Calendar onChange={this.onChange.bind(this)} {...this.state}/>
-        <BarChart {...this.state}/>
+        <TimeTrackStats/>
+        <TimeSpendTable {...this.state}/>
+        <DoughnutChart {...this.state}/>
       </div>
     )
   }
 }
 
-export default Home;
+export default createContainer(() => {
+  const cardsHandle = Meteor.subscribe('cards');
+  const loading = !cardsHandle.ready();
+  return {
+    loading
+  }
+}, Home);
