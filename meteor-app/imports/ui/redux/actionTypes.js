@@ -1,0 +1,6 @@
+export const RECEIVE_TIME_BY_DAY = 'RECEIVE_TIME_BY_DAY';
+export const RECEIVE_TIME_BY_BOARD = 'RECEIVE_TIME_BY_BOARD';
+export const RECEIVE_TIME_BY_CARD = 'RECEIVE_TIME_BY_CARD';
+
+export const SET_USERS = 'SET_USERS';
+export const SET_BOARDS = 'SET_BOARDS';

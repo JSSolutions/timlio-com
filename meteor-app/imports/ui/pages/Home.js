@@ -1,37 +1,76 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
-import BarChart from '../components/BarChart';
-import Calendar from '../components/Calendar';
-import GregorianCalendar from 'gregorian-calendar';
-import enUS from 'gregorian-calendar/lib/locale/en_US';
-import moment from 'moment';
+import { connect } from 'react-redux';
+import TimeSpendTable from '../components/TimeSpendTable';
+import TimeTrackStats from '../components/TimeTrackStats';
+import DoughnutChart from '../components/DoughnutChart';
+import { fetchTimeByDay, fetchTimeByBoard } from '../redux/actions';
+import { getInterval } from '../helpers';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    const endValue = new GregorianCalendar(enUS);
-    endValue.setTime(new Date());
-    const startValue = new GregorianCalendar(enUS);
-    startValue.setTime(moment().subtract(6, 'days'));
-
-    this.state = {
-      startValue,
-      endValue
-    };
+  componentDidMount() {
+    const { fetchTimeByBoard, fetchTimeByDay } = this.props;
+    fetchTimeByBoard();
+    fetchTimeByDay();
   }
-  onChange(field, value) {
-    this.setState({
-      [field]: value
-    });
+  componentWillReceiveProps({ location }) {
+    if (this.props.location.query !== location.query) {
+      this.props.fetchTimeByDay();
+    }
+  }
+  renderTimeTrackStats() {
+    const { timeByDay, fetchTimeByDay, startDate, endDate } = this.props;
+      return (
+        <TimeTrackStats 
+          startDate={startDate}
+          endDate={endDate}
+          fetchTimeByDay={fetchTimeByDay}
+          timeByDay={timeByDay}/>
+      )
+  }
+  renderDetailedInfo() {
+    if (this.props.timeByBoard) {
+      return (
+        <div className="row">
+          <div className="col-sm-6">
+            <TimeSpendTable timeByBoard={this.props.timeByBoard}/>
+          </div>
+          <div className="col-sm-6">
+            <DoughnutChart timeByBoard={this.props.timeByBoard}/>
+          </div>
+        </div>
+      )
+    }
   }
   render() {
     return (
       <div>
-        <Calendar onChange={this.onChange.bind(this)} {...this.state}/>
-        <BarChart {...this.state}/>
+        {this.renderTimeTrackStats()}
+        {this.renderDetailedInfo()}
       </div>
     )
   }
 }
 
-export default Home;
+const mapStateToProps = ({ timeSpend }, { location }) => {
+  const { startDate, endDate } = getInterval(location.query);
+  return {
+    timeByDay: timeSpend.timeByDay,
+    timeByBoard: timeSpend.timeByBoard,
+    startDate,
+    endDate
+  }
+};
+
+const mapDispatchToProps = (dispatch, { location }) => {
+  return {
+    fetchTimeByDay() {
+      const { startDate, endDate } = getInterval(location.query);
+      dispatch(fetchTimeByDay(startDate, endDate));
+    },
+    fetchTimeByBoard() {
+      dispatch(fetchTimeByBoard(Meteor.userId()));
+    }
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
