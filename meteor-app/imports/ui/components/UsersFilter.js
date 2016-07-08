@@ -36,17 +36,18 @@ class UsersFilter extends Component {
   }
 }
 
-const mapStateToProps = ({ selectedUsers }, { users, fetchTimeByDay }) => ({
+const mapStateToProps = ({ selectedUsers, fetchTimeByDay }, { users }) => ({
   fetchTimeByDay,
   users,
   selectedUsers
 });
 
-export default createContainer(({ fetchTimeByDay }) => {
+const MeteorContainer = createContainer(() => {
   const usersHandle = Meteor.subscribe('users');
   const userExists = usersHandle.ready();
   return {
-    users: userExists ? Meteor.users.find().fetch() : [],
-    fetchTimeByDay
+    users: userExists ? Meteor.users.find().fetch() : []
   }
-}, connect(mapStateToProps)(UsersFilter));
+}, UsersFilter);
+
+export default connect(mapStateToProps)(MeteorContainer);

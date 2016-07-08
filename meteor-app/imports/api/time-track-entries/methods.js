@@ -45,7 +45,7 @@ export const update = PromisifiedMethod({
   }
 });
 
-export const getUserCardsTime = new ValidatedMethod({
+export const getUserCardsTime = PromisifiedMethod({
   name: 'TimeTrackEntries.getUserCardsTime',
   
   validate: UserIdSchema.validator(),
@@ -65,7 +65,7 @@ export const getUserCardsTime = new ValidatedMethod({
   }
 });
 
-export const getUserBoardsTime = new ValidatedMethod({
+export const getUserBoardsTime = PromisifiedMethod({
   name: 'TimeTrackEntries.getUserBoardsTime',
 
   validate: UserIdSchema.validator(),
@@ -85,7 +85,7 @@ export const getUserBoardsTime = new ValidatedMethod({
   }
 });
 
-export const getUserTimeByDay = new ValidatedMethod({
+export const getUserTimeByDay = PromisifiedMethod({
   name: 'TimeTrackEntries.getUserTimeByDay',
 
   validate: new SimpleSchema(
