@@ -16,9 +16,6 @@ function format(v) {
 }
 
 class Interval extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     const props = this.props;
 

@@ -4,7 +4,7 @@ import Calendar from './Calendar';
 import UsersFilter from './UsersFilter';
 import BoardsFilter from './BoardsFilter';
 import DateTimeFormat from 'gregorian-calendar-format';
-import { toGregorianCalendar, getInterval } from '../helpers';
+import { toGregorianCalendar } from '../helpers';
 import { withRouter } from 'react-router';
 
 class TimeTrackStats extends Component {
@@ -12,19 +12,6 @@ class TimeTrackStats extends Component {
     super(props);
 
     this.onDateChange = this.onDateChange.bind(this);
-  }
-  componentDidMount() {
-    const { location } = this.props;
-    this.fetchData(location);
-  }
-  componentWillReceiveProps({ location }) {
-    if (this.props.location.query !== location.query) {
-      this.fetchData(location)
-    }
-  }
-  fetchData({ query }) {
-    const { startDate, endDate } = getInterval(query);
-    this.props.fetchTimeByDay(startDate, endDate, Meteor.userId());
   }
   onDateChange(value) {
     const { router } = this.props;
@@ -36,8 +23,7 @@ class TimeTrackStats extends Component {
     router.push({ query })
   }
   render() {
-    const { timeByDay, location } = this.props;
-    const { startDate, endDate } = getInterval(location.query);
+    const { timeByDay, startDate, endDate, fetchTimeByDay } = this.props;
     
     if (timeByDay) {
       return (
@@ -46,8 +32,8 @@ class TimeTrackStats extends Component {
             onChange={this.onDateChange}
             value={[toGregorianCalendar(startDate), toGregorianCalendar(endDate)]}/>
           <div className="row margin-bottom">
-            <UsersFilter/>
-            <BoardsFilter/>
+            <UsersFilter fetchTimeByDay={fetchTimeByDay}/>
+            <BoardsFilter fetchTimeByDay={fetchTimeByDay}/>
           </div>
           <BarChart
             timeByDay={timeByDay}

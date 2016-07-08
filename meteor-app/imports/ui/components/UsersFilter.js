@@ -7,11 +7,15 @@ import { setUsers } from '../redux/actions';
 class UsersFilter extends Component {
   constructor(props) {
     super(props);
-    
+
     this.onChange = this.onChange.bind(this);
   }
+  componentWillReceiveProps({ selectedUsers }) {
+    if (this.props.selectedUsers !== selectedUsers) {
+      this.props.fetchTimeByDay();
+    }
+  }
   onChange(selectedUsers) {
-    
     this.props.dispatch(setUsers(selectedUsers || []));
   }
   render() {
@@ -32,15 +36,17 @@ class UsersFilter extends Component {
   }
 }
 
-const mapStateToProps = ({ selectedUsers }, { users }) => ({
+const mapStateToProps = ({ selectedUsers }, { users, fetchTimeByDay }) => ({
+  fetchTimeByDay,
   users,
   selectedUsers
 });
 
-export default createContainer(() => {
+export default createContainer(({ fetchTimeByDay }) => {
   const usersHandle = Meteor.subscribe('users');
   const userExists = usersHandle.ready();
   return {
-    users: userExists ? Meteor.users.find().fetch() : []
+    users: userExists ? Meteor.users.find().fetch() : [],
+    fetchTimeByDay
   }
 }, connect(mapStateToProps)(UsersFilter));
