@@ -33,21 +33,11 @@ export const fetchTimeByDay = (startMoment, endMoment) => (dispatch, getState) =
   const userIds = _.pluck(selectedUsers, 'value');
   const boardIds = _.pluck(selectedBoards, 'value');
   
-  getUserTimeByDay.call({ startDate, endDate, userIds, boardIds }, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-
-    dispatch(receiveTimeByDay(result));
-  });
+  return getUserTimeByDay.callPromise({ startDate, endDate, userIds, boardIds })
+    .then((result) => dispatch(receiveTimeByDay(result)));
 };
 
-export const fetchTimeByBoard = (userId) => (dispatch) => {
-  getUserBoardsTime.call({ userId: Meteor.userId() }, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-    
-    dispatch(receiveTimeByBoard(result));
-  });
-};
+export const fetchTimeByBoard = (userId) => (dispatch) =>
+  getUserBoardsTime.callPromise({ userId: Meteor.userId() })
+    .then((result) => dispatch(receiveTimeByBoard(result)));
+
