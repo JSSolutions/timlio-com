@@ -26,6 +26,7 @@ ddp-common@1.2.6
 ddp-rate-limiter@1.0.5
 ddp-server@1.2.8_1
 deps@1.0.12
+didericis:callpromise-mixin@0.0.1
 diff-sequence@1.0.6
 ecmascript@0.4.6_1
 ecmascript-runtime@0.2.11_1
@@ -33,6 +34,7 @@ ejson@1.0.12
 email@1.0.14_1
 es5-shim@4.5.12_1
 fastclick@1.0.12
+fortawesome:fontawesome@4.5.0
 geojson-utils@1.0.9
 hot-code-push@1.0.4
 html-tools@1.0.10

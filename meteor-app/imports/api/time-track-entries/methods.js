@@ -1,14 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { PromisifiedMethod } from '../helpers';
 import TimeTrackService from './time-track-entries-service';
 import { CardIdSchema, IdSchema, BoardIdSchema, ListIdSchema, NameSchema } from '../schemas';
 import ListsService from '../lists/lists-service';
 import BoardsService from '../boards/boards-service';
 import CardsService from '../cards/cards-service';
 
-
-export const insert = new ValidatedMethod({
+export const insert = PromisifiedMethod({
   name: 'TimeTrackEntries.insert',
 
   validate: new SimpleSchema([CardIdSchema, BoardIdSchema, ListIdSchema, NameSchema]).validator(),
@@ -30,7 +29,7 @@ export const insert = new ValidatedMethod({
   }
 });
 
-export const update = new ValidatedMethod({
+export const update = PromisifiedMethod({
   name: 'TimeTrackEntries.update',
 
   validate: IdSchema.validator(),

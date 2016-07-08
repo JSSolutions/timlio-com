@@ -30,3 +30,5 @@ static-html
 twbs:bootstrap
 meteorhacks:picker
 meteorhacks:aggregate
+fortawesome:fontawesome
+didericis:callpromise-mixin
