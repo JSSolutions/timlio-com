@@ -37,18 +37,17 @@ class BoardsFilter extends Component {
   }
 }
 
-const mapStateToProps = ({ selectedBoards, fetchTimeByDay }, { boards }) => ({
+const mapStateToProps = ({ selectedBoards }, { boards, fetchTimeByDay }) => ({
   boards,
   selectedBoards,
   fetchTimeByDay
 });
 
-const MeteorContainer = createContainer(({ fetchTimeByDay }) => {
+const MeteorContainer = createContainer(() => {
   const boardsHandle = Meteor.subscribe('boards');
   const boardsExists = boardsHandle.ready();
   return {
-    boards: boardsExists ? Boards.find().fetch() : [],
-    fetchTimeByDay
+    boards: boardsExists ? Boards.find().fetch() : []
   }
 }, BoardsFilter);
 

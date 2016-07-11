@@ -36,7 +36,7 @@ class UsersFilter extends Component {
   }
 }
 
-const mapStateToProps = ({ selectedUsers, fetchTimeByDay }, { users }) => ({
+const mapStateToProps = ({ selectedUsers }, { users, fetchTimeByDay }) => ({
   fetchTimeByDay,
   users,
   selectedUsers
