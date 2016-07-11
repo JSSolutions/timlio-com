@@ -9,10 +9,15 @@ const BoardsService = Object.assign(createService(Boards), {
       const { token } = user.services.trello;
       
       const board = Trello.getBoard(boardId, token);
-
+      const members = Trello.getBoardMemberships(boardId, token).map((membership) => ({
+        userId: membership.idMember,
+        role: membership.memberType
+      }));
+      
       return this.insert({
         _id: board.id,
-        name: board.name
+        name: board.name,
+        members
       });
     }
   }

@@ -1,6 +1,6 @@
 export const UserRoles = {
   admin: 'admin',
-  member: 'member'
+  normal: 'normal'
 };
 
 export const TrelloEndpoint = 'https://api.trello.com/1/';
