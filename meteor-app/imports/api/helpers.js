@@ -1,3 +1,6 @@
+import { CallPromiseMixin } from 'meteor/didericis:callpromise-mixin';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+ 
 export const createService = (collection) => ({
   collection,
 
@@ -13,3 +16,7 @@ export const createService = (collection) => ({
     return this.collection.remove({ _id });
   }
 });
+
+export const PromisifiedMethod = (options) => {
+  return new ValidatedMethod(Object.assign(options, { mixins: [CallPromiseMixin] }))
+};

@@ -1,14 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { PromisifiedMethod } from '../helpers';
 import TimeTrackService from './time-track-entries-service';
 import { CardIdSchema, IdSchema, BoardIdSchema, ListIdSchema, NameSchema, UserIdSchema, idSchemaDoc } from '../schemas';
 import ListsService from '../lists/lists-service';
 import BoardsService from '../boards/boards-service';
 import CardsService from '../cards/cards-service';
 
-
-export const insert = new ValidatedMethod({
+export const insert = PromisifiedMethod({
   name: 'TimeTrackEntries.insert',
 
   validate: new SimpleSchema([CardIdSchema, BoardIdSchema, ListIdSchema, NameSchema]).validator(),
@@ -30,7 +29,7 @@ export const insert = new ValidatedMethod({
   }
 });
 
-export const update = new ValidatedMethod({
+export const update = PromisifiedMethod({
   name: 'TimeTrackEntries.update',
 
   validate: IdSchema.validator(),
@@ -46,7 +45,7 @@ export const update = new ValidatedMethod({
   }
 });
 
-export const getUserCardsTime = new ValidatedMethod({
+export const getUserCardsTime = PromisifiedMethod({
   name: 'TimeTrackEntries.getUserCardsTime',
   
   validate: UserIdSchema.validator(),
@@ -66,7 +65,7 @@ export const getUserCardsTime = new ValidatedMethod({
   }
 });
 
-export const getUserBoardsTime = new ValidatedMethod({
+export const getUserBoardsTime = PromisifiedMethod({
   name: 'TimeTrackEntries.getUserBoardsTime',
 
   validate: UserIdSchema.validator(),
@@ -86,7 +85,7 @@ export const getUserBoardsTime = new ValidatedMethod({
   }
 });
 
-export const getUserTimeByDay = new ValidatedMethod({
+export const getUserTimeByDay = PromisifiedMethod({
   name: 'TimeTrackEntries.getUserTimeByDay',
 
   validate: new SimpleSchema(

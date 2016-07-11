@@ -5,8 +5,10 @@ import { Meteor } from 'meteor/meteor';
 export default class MainLayout extends Component {
   loginOnClick() {
     Meteor.loginWithTrello({}, (err) => { 
-      if (!err)
-        console.log('Success') 
+      if (!err) {
+        console.log('Success');
+        document.location.reload();
+      }
     });
   }
   render() {
@@ -18,14 +20,14 @@ export default class MainLayout extends Component {
               <div className="navbar-brand">Timlio</div>
             </div>
             <div className="collapse navbar-collapse">
-              {() => {
-                if (Meteor.userId()) {
+              {(() => {
+                if (!Meteor.userId()) {
                   return (
                     <ul className="nav navbar-nav navbar-right">
                       <li><a onClick={this.loginOnClick} href="#">Login</a></li>
                     </ul>
                   )}
-              }}
+              })()}
             </div>
           </div>
         </nav>

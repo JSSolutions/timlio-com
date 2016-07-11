@@ -43,11 +43,12 @@ const mapStateToProps = ({ selectedBoards }, { boards, fetchTimeByDay }) => ({
   fetchTimeByDay
 });
 
-export default createContainer(({ fetchTimeByDay }) => {
+const MeteorContainer = createContainer(() => {
   const boardsHandle = Meteor.subscribe('boards');
   const boardsExists = boardsHandle.ready();
   return {
-    boards: boardsExists ? Boards.find().fetch() : [],
-    fetchTimeByDay
+    boards: boardsExists ? Boards.find().fetch() : []
   }
-}, connect(mapStateToProps)(BoardsFilter));
+}, BoardsFilter);
+
+export default connect(mapStateToProps)(MeteorContainer);

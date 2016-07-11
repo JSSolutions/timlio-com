@@ -1,11 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { PromisifiedMethod } from '../helpers';
 import { BoardsSchema } from './boards-schema';
 import BoardsService from './boards-service';
 import { IdSchema } from '../schemas';
 
-export const insert = new ValidatedMethod({
+export const insert = PromisifiedMethod({
   name: 'Boards.insert',
   
   validate: BoardsSchema.validator(),
@@ -21,7 +21,7 @@ export const insert = new ValidatedMethod({
   }
 });
 
-export const update = new ValidatedMethod({
+export const update = PromisifiedMethod({
   name: 'Boards.update',
   
   validate: IdSchema.validator(),
@@ -37,7 +37,7 @@ export const update = new ValidatedMethod({
   }
 });
 
-export const remove = new ValidatedMethod({
+export const remove = PromisifiedMethod({
   name: 'Boards.remove',
   
   validate: IdSchema.validator(),
