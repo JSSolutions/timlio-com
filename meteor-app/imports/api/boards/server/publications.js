@@ -6,7 +6,7 @@ Meteor.publish('boards', function () {
   return Boards.find({});
 });
 
-Meteor.publish('adminBoards', function () {
+Meteor.publish('accessedBoards', function () {
   const boards = Roles.getGroupsForUser(this.userId);
   return Boards.find({ _id: { $in: boards }});
 });

@@ -9,9 +9,11 @@ Meteor.publish('users', function () {
 Meteor.publish('accessedUsers', function () {
   const boards = Roles.getGroupsForUser(this.userId, UserRoles.ADMIN);
   const query = boards.reduce((query, board) => {
-    query[`roles.${board}`] = { exists: true };
+    query[`roles.${board}`] = { $exists: true };
     return query;
   }, {});
-  console.log(query);
-  return Meteor.users.find()
+
+  query['profile'] = { $exists: true };
+
+  return Meteor.users.find(query);
 });

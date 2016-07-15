@@ -45,8 +45,9 @@ const mapStateToProps = ({ selectedUsers }, { users, fetchTimeByDay }) => ({
 });
 
 const MeteorContainer = createContainer(() => {
-  const usersHandle = Meteor.subscribe('users');
+  const usersHandle = Meteor.subscribe('accessedUsers');
   const userExists = usersHandle.ready();
+
   return {
     users: userExists ? Meteor.users.find().fetch() : []
   }
