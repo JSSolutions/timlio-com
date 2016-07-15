@@ -20,7 +20,9 @@ class UsersFilter extends Component {
   }
   render() {
     const { users, selectedUsers } = this.props;
-    const options = users.map((user) => ({
+    const options = users.filter((user) => 
+      !!user.profile
+    ).map((user) => ({
       value: user._id,
       label: user.profile.name
     }));

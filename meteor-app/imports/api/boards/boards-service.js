@@ -1,3 +1,4 @@
+import { Roles } from 'meteor/alanning:roles';
 import { Boards } from './boards';
 import { createService } from '../helpers';
 import * as Trello from '../trello';
@@ -9,15 +10,23 @@ const BoardsService = Object.assign(createService(Boards), {
       const { token } = user.services.trello;
       
       const board = Trello.getBoard(boardId, token);
-      const members = Trello.getBoardMemberships(boardId, token).map((membership) => ({
-        userId: membership.idMember,
-        role: membership.memberType
-      }));
+      const roles = Trello.getBoardMemberships(boardId, token);
+      roles.forEach((role) => {
+        const { insertedId } = Meteor.users.upsert({ 'services.trello.id': role.idMember }, {
+          $set: {
+            'services.trello.id': role.idMember
+          }
+        });
+
+        if (insertedId) {
+          Roles.addUsersToRoles(insertedId, role.memberType, boardId);
+        }
+      });
+
       
       return this.insert({
         _id: board.id,
-        name: board.name,
-        members
+        name: board.name
       });
     }
   }

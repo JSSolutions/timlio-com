@@ -35,7 +35,7 @@ export const toGregorianCalendar = (value) => {
   const hoursOffset = 11;
   const calendar = new GregorianCalendar(enUS);
   calendar.setTime(moment(value).add(hoursOffset, 'hours'));
-  console.log(calendar);
+
   return calendar;
 };
 
