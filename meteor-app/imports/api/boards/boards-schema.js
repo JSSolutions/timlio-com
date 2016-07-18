@@ -1,9 +1,9 @@
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { UserRoles } from '../constants.js';
 import { BaseSchema } from '../schemas.js';
-import { UserIdSchema, NameSchema } from '../schemas';
+import { TrelloUserIdSchema, NameSchema } from '../schemas';
 
-const userRoleSchema = new SimpleSchema([UserIdSchema, {
+const UserRoleSchema = new SimpleSchema([TrelloUserIdSchema, {
   role: {
     type: String,
     allowedValues: _.values(UserRoles)
@@ -11,8 +11,8 @@ const userRoleSchema = new SimpleSchema([UserIdSchema, {
 }]);
 
 export const BoardsSchema = new SimpleSchema([BaseSchema, NameSchema, {
-  users: {
-    type: [userRoleSchema],
+  members: {
+    type: [UserRoleSchema],
     minCount: 1,
     optional: true
   }

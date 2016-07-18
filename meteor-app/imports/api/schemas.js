@@ -69,6 +69,10 @@ export const TrelloIdSchema = new SimpleSchema({
   _id: trelloIdSchemaDoc
 });
 
+export const TrelloUserIdSchema = new SimpleSchema({
+  userId: trelloIdSchemaDoc
+});
+
 export const CardIdSchema = new SimpleSchema({
   cardId: trelloIdSchemaDoc
 });
