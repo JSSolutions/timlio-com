@@ -12,7 +12,7 @@ class UsersFilter extends Component {
   }
   componentWillReceiveProps({ selectedUsers }) {
     if (this.props.selectedUsers !== selectedUsers) {
-      this.props.fetchTimeByDay();
+      this.props.fetchTime();
     }
   }
   onChange(selectedUsers) {
@@ -38,8 +38,8 @@ class UsersFilter extends Component {
   }
 }
 
-const mapStateToProps = ({ selectedUsers }, { users, fetchTimeByDay }) => ({
-  fetchTimeByDay,
+const mapStateToProps = ({ selectedUsers }, { users, fetchTime }) => ({
+  fetchTime,
   users,
   selectedUsers
 });

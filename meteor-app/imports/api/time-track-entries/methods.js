@@ -68,9 +68,15 @@ export const getUserCardsTime = PromisifiedMethod({
 export const getUserBoardsTime = PromisifiedMethod({
   name: 'TimeTrackEntries.getUserBoardsTime',
 
-  validate: UserIdSchema.validator(),
+  validate: new SimpleSchema(
+    {
+      startDate: { type: Date },
+      endDate: { type: Date },
+      userIds: { type: [idSchemaDoc] },
+      boardIds: { type: [idSchemaDoc] }
+    }).validator(),
 
-  run({ userId }) {
+  run({ startDate, endDate, userIds, boardIds }) {
     if (!this.userId) {
       throw new Meteor.Error(
         403, 'Unauthorized user'
@@ -81,7 +87,7 @@ export const getUserBoardsTime = PromisifiedMethod({
       return;
     }
 
-    return TimeTrackService.timeOnBoards(userId);
+    return TimeTrackService.timeOnBoards(startDate, endDate, userIds, boardIds);
   }
 });
 

@@ -20,10 +20,10 @@ class TimeTrackStats extends Component {
       'date': formatter.format(value[0]),
       'end_date': formatter.format(value[1])
     };
-    router.push({ query })
+    router.push({ query });
   }
   render() {
-    const { timeByDay, startDate, endDate, fetchTimeByDay } = this.props;
+    const { timeByDay, startDate, endDate, fetchTime } = this.props;
     
     if (timeByDay) {
       return (
@@ -32,8 +32,8 @@ class TimeTrackStats extends Component {
             onChange={this.onDateChange}
             value={[toGregorianCalendar(startDate), toGregorianCalendar(endDate)]}/>
           <div className="row margin-bottom">
-            <UsersFilter fetchTimeByDay={fetchTimeByDay}/>
-            <BoardsFilter fetchTimeByDay={fetchTimeByDay}/>
+            <UsersFilter fetchTime={fetchTime}/>
+            <BoardsFilter fetchTime={fetchTime}/>
           </div>
           <BarChart
             timeByDay={timeByDay}

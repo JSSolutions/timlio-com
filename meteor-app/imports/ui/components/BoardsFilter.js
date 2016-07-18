@@ -13,7 +13,7 @@ class BoardsFilter extends Component {
   }
   componentWillReceiveProps({ selectedBoards }) {
     if (this.props.selectedBoards !== selectedBoards) {
-      this.props.fetchTimeByDay();
+      this.props.fetchTime();
     }
   }
   onChange(selectedBoards) {
@@ -37,10 +37,10 @@ class BoardsFilter extends Component {
   }
 }
 
-const mapStateToProps = ({ selectedBoards }, { boards, fetchTimeByDay }) => ({
+const mapStateToProps = ({ selectedBoards }, { boards, fetchTime }) => ({
   boards,
   selectedBoards,
-  fetchTimeByDay
+  fetchTime
 });
 
 const MeteorContainer = createContainer(() => {

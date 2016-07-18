@@ -26,18 +26,23 @@ export const setBoards = (boards) => ({
   boards
 });
 
-export const fetchTimeByDay = (startMoment, endMoment) => (dispatch, getState) => {
+export const fetchTime = (startMoment, endMoment) => (dispatch, getState) => {
   const startDate = new Date(startMoment);
   const endDate = new Date(endMoment.endOf('day'));
   const { selectedUsers, selectedBoards } = getState();
   const userIds = _.pluck(selectedUsers, 'value');
   const boardIds = _.pluck(selectedBoards, 'value');
+  const options = { startDate, endDate, userIds, boardIds };
 
-  return getUserTimeByDay.callPromise({ startDate, endDate, userIds, boardIds })
-    .then((result) => dispatch(receiveTimeByDay(result)));
+  return Promise.all([
+    getUserTimeByDay.callPromise(options),
+    getUserBoardsTime.callPromise(options)
+  ]).then((result) => {
+    dispatch(receiveTimeByDay(result[0]));
+    dispatch(receiveTimeByBoard(result[1]));
+  });
 };
 
-export const fetchTimeByBoard = (userId) => (dispatch) =>
-  getUserBoardsTime.callPromise({ userId: Meteor.userId() })
-    .then((result) => dispatch(receiveTimeByBoard(result)));
+
+
 

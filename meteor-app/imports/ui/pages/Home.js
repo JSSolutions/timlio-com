@@ -3,29 +3,26 @@ import { connect } from 'react-redux';
 import TimeSpendTable from '../components/TimeSpendTable';
 import TimeTrackStats from '../components/TimeTrackStats';
 import DoughnutChart from '../components/DoughnutChart';
-import { fetchTimeByDay, fetchTimeByBoard } from '../redux/actions';
+import { fetchTime } from '../redux/actions';
 import { getInterval } from '../helpers';
 
 class Home extends Component {
   componentDidMount() {
-    const { fetchTimeByBoard, fetchTimeByDay } = this.props;
-
-    fetchTimeByBoard();
-    fetchTimeByDay();
+    this.props.fetchTime();
   }
-  componentWillUpdate({ location }) {
+  componentWillUpdate({ location, startDate, endDate }) {
     if (this.props.location.query !== location.query) {
-      const { startDate, endDate } = getInterval(location.query);
-      this.props.fetchTimeByDay(startDate, endDate);
+      const { fetchTime } = this.props;
+      fetchTime(startDate, endDate);
     }
   }
   renderTimeTrackStats() {
-    const { timeByDay, fetchTimeByDay, startDate, endDate } = this.props;
+    const { timeByDay, fetchTime, startDate, endDate } = this.props;
       return (
         <TimeTrackStats 
           startDate={startDate}
           endDate={endDate}
-          fetchTimeByDay={fetchTimeByDay}
+          fetchTime={fetchTime}
           timeByDay={timeByDay}/>
       )
   }
@@ -66,15 +63,12 @@ const mapStateToProps = ({ timeSpend }, { location }) => {
 
 const mapDispatchToProps = (dispatch, { location }) => {
   return {
-    fetchTimeByDay(startDate, endDate) {
+    fetchTime(startDate, endDate) {
       if (!startDate && !endDate) {
         ({ startDate, endDate } = getInterval(location.query));
       }
 
-      dispatch(fetchTimeByDay(startDate, endDate));
-    },
-    fetchTimeByBoard() {
-      dispatch(fetchTimeByBoard(Meteor.userId()));
+      dispatch(fetchTime(startDate, endDate));
     }
   }
 };

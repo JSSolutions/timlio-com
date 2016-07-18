@@ -20,8 +20,9 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
 
     return this.collection.aggregate(pipeline);
   },
-  timeOnBoards(userId) {
+  timeOnBoards(start, end, userIds, boardIds) {
     const pipeline = [
+      { $match: { _id: boardIds && boardIds.length ? { $in: boardIds } : { $exists: true }}},
       { 
         $lookup: {
           from: 'cards',
@@ -40,7 +41,12 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
         }
       },
       { $unwind: '$timeTrackEntries' },
-      { $match: { 'timeTrackEntries.userId': userId }},
+      {
+        $match: Object.assign({
+          'timeTrackEntries.startDate': { $gte: start },
+          'timeTrackEntries.stopDate': { $lt: end }
+        }, { 'timeTrackEntries.userId': userIds && userIds.length ? { $in: userIds } : { $exists: true }})
+      },
       { $project: { name: 1, timeSpent: { $subtract: ['$timeTrackEntries.stopDate', '$timeTrackEntries.startDate'] }}},
       { $group: { _id: '$_id', name: { $first: '$name' }, time: { $sum: '$timeSpent' }}}
     ];
