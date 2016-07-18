@@ -8,11 +8,10 @@ import { getInterval } from '../helpers';
 
 class Home extends Component {
   componentDidMount() {
-    const { fetchTimeByBoard, fetchTimeByDay, location } = this.props;
-    const { startDate, endDate } = getInterval(location.query);
+    const { fetchTimeByBoard, fetchTimeByDay } = this.props;
 
     fetchTimeByBoard();
-    fetchTimeByDay(startDate, endDate);
+    fetchTimeByDay();
   }
   componentWillUpdate({ location }) {
     if (this.props.location.query !== location.query) {
@@ -65,9 +64,13 @@ const mapStateToProps = ({ timeSpend }, { location }) => {
   }
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, { location }) => {
   return {
     fetchTimeByDay(startDate, endDate) {
+      if (!startDate && !endDate) {
+        ({ startDate, endDate } = getInterval(location.query));
+      }
+
       dispatch(fetchTimeByDay(startDate, endDate));
     },
     fetchTimeByBoard() {
