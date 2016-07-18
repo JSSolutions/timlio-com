@@ -13,7 +13,7 @@ function getChartData(startValue, endValue, data) {
     days.push(moment(tempDate));
   }
   const format = 'ddd, MMM Do';
-  
+
   return days.map((day) => {
     const found = data.find((item) => {
       const tempDay = moment([item.year, item.month - 1, item.day]);

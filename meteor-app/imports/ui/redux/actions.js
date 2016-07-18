@@ -28,11 +28,11 @@ export const setBoards = (boards) => ({
 
 export const fetchTimeByDay = (startMoment, endMoment) => (dispatch, getState) => {
   const startDate = new Date(startMoment);
-  const endDate = new Date(endMoment);
+  const endDate = new Date(endMoment.endOf('day'));
   const { selectedUsers, selectedBoards } = getState();
   const userIds = _.pluck(selectedUsers, 'value');
   const boardIds = _.pluck(selectedBoards, 'value');
-  
+
   return getUserTimeByDay.callPromise({ startDate, endDate, userIds, boardIds })
     .then((result) => dispatch(receiveTimeByDay(result)));
 };

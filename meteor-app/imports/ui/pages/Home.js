@@ -8,13 +8,16 @@ import { getInterval } from '../helpers';
 
 class Home extends Component {
   componentDidMount() {
-    const { fetchTimeByBoard, fetchTimeByDay } = this.props;
+    const { fetchTimeByBoard, fetchTimeByDay, location } = this.props;
+    const { startDate, endDate } = getInterval(location.query);
+
     fetchTimeByBoard();
-    fetchTimeByDay();
+    fetchTimeByDay(startDate, endDate);
   }
-  componentWillReceiveProps({ location }) {
+  componentWillUpdate({ location }) {
     if (this.props.location.query !== location.query) {
-      this.props.fetchTimeByDay();
+      const { startDate, endDate } = getInterval(location.query);
+      this.props.fetchTimeByDay(startDate, endDate);
     }
   }
   renderTimeTrackStats() {
@@ -53,6 +56,7 @@ class Home extends Component {
 
 const mapStateToProps = ({ timeSpend }, { location }) => {
   const { startDate, endDate } = getInterval(location.query);
+
   return {
     timeByDay: timeSpend.timeByDay,
     timeByBoard: timeSpend.timeByBoard,
@@ -61,10 +65,9 @@ const mapStateToProps = ({ timeSpend }, { location }) => {
   }
 };
 
-const mapDispatchToProps = (dispatch, { location }) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTimeByDay() {
-      const { startDate, endDate } = getInterval(location.query);
+    fetchTimeByDay(startDate, endDate) {
       dispatch(fetchTimeByDay(startDate, endDate));
     },
     fetchTimeByBoard() {
