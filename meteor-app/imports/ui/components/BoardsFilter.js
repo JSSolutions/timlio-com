@@ -44,7 +44,7 @@ const mapStateToProps = ({ selectedBoards }, { boards, fetchTimeByDay }) => ({
 });
 
 const MeteorContainer = createContainer(() => {
-  const boardsHandle = Meteor.subscribe('boards');
+  const boardsHandle = Meteor.subscribe('accessedBoards');
   const boardsExists = boardsHandle.ready();
   return {
     boards: boardsExists ? Boards.find().fetch() : []
