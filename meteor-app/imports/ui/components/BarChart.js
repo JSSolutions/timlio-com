@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Bar } from 'react-chartjs';
 import moment from 'moment';
+import { millisecondsToTime } from '../helpers';
 
 function getChartData(startValue, endValue, data) {
   const diff = endValue.diff(startValue, 'days');
@@ -34,8 +35,7 @@ export default class BarChart extends Component {
     const { startDate, endDate, timeByDay } = this.props;
 
     const days = getChartData(startDate, endDate, timeByDay);
-    const data = _.pluck(days, 'time').map((dayTime) =>
-    dayTime / 1000 / 3600);
+    const data = _.pluck(days, 'time');
     
     const chartData = {
       labels: _.pluck(days, 'format'),
@@ -51,14 +51,55 @@ export default class BarChart extends Component {
     };
 
     const chartOptions = {
+      scaleLabel({ value }) {
+        return millisecondsToTime(value);
+      },
+
+
       responsive: true,
       maintainAspectRatio: false,
-      barStrokeWidth: 1
+      barStrokeWidth: 1,
+      customTooltips(tooltip) {
+        const tooltipEl = $('#bar-tooltip');
+        if (!tooltip) {
+          tooltipEl.css({
+            opacity: 0
+          });
+          return;
+        }
+
+        tooltipEl.removeClass('above below');
+        tooltipEl.addClass(tooltip.yAlign);
+
+        const parts = tooltip.text.split(':');
+        const innerHtml = `<span>${parts[0].trim()}</span> : <span><b>${millisecondsToTime(parts[1].trim())}</b></span>`;
+        tooltipEl.html(innerHtml);
+
+        tooltipEl.css({
+          opacity: 1,
+          left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
+          top: tooltip.chart.canvas.offsetTop + tooltip.y + 'px',
+          fontFamily: tooltip.fontFamily,
+          fontSize: tooltip.fontSize,
+          fontStyle: tooltip.fontStyle
+        });
+      },
+
+    };
+
+    const tooltipStyle = {
+      position: 'absolute',
+      backgroundColor: 'black',
+      color: 'white',
+      borderRadius: '5px',
+      padding: '5px',
+      opacity: 0
     };
 
     return (
       <div className="row margin-bottom" style={{height: 375}}>
         <Bar data={chartData} options={chartOptions} redraw/>
+        <div id="bar-tooltip" style={tooltipStyle}></div>
       </div>
     )
   }

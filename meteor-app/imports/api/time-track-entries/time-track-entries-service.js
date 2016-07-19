@@ -7,7 +7,8 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
     const pipeline = [
       { $match: { userId }},
       { $project: { cardId: 1, timeSpent: { $subtract: ['$stopDate', '$startDate'] }}},
-      { $lookup: {
+      {
+        $lookup: {
           from: 'cards',
           localField: 'cardId',
           foreignField: '_id',
