@@ -3,7 +3,7 @@ import { createService } from '../helpers';
 import { Boards } from '../boards/boards';
 
 const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
-  timeOnCards(userId) {
+  timeByCard(userId) {
     const pipeline = [
       { $match: { userId }},
       { $project: { cardId: 1, timeSpent: { $subtract: ['$stopDate', '$startDate'] }}},
@@ -21,7 +21,7 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
 
     return this.collection.aggregate(pipeline);
   },
-  timeOnBoards(start, end, userIds, boardIds) {
+  timeByBoard(start, end, userIds, boardIds) {
     const pipeline = [
       { $match: { _id: boardIds && boardIds.length ? { $in: boardIds } : { $exists: true }}},
       { 
@@ -54,7 +54,7 @@ const TimeTrackEntryService = Object.assign(createService(TimeTrackEntries), {
 
     return Boards.aggregate(pipeline); 
   },
-  betweenDates(start, end, userIds, boardIds) {
+  timeByDay(start, end, userIds, boardIds) {
     const pipeline = [
       { 
         $match: Object.assign({

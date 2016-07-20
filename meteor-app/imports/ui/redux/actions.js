@@ -1,4 +1,4 @@
-import { getUserBoardsTime, getUserTimeByDay } from '../../api/time-track-entries/methods';
+import { getUserTimeTrackStats } from '../../api/time-track-entries/methods';
 import * as ActionTypes from './actionTypes';
 
 export const receiveTimeByDay = (timeByDay) => ({
@@ -16,6 +16,15 @@ export const receiveTimeByCard = (timeByCard) => ({
   timeByCard
 });
 
+export const receiveTimeTrackStats = (timeTrackStats) => ({
+  type: ActionTypes.RECEIVE_TIME_TRACK_STATS,
+  timeTrackStats
+});
+
+export const requestTimeTrackStats = () => ({
+  type: ActionTypes.REQUEST_TIME_TRACK_STATS
+});
+
 export const setUsers = (users) => ({
   type: ActionTypes.SET_USERS,
   users
@@ -26,7 +35,9 @@ export const setBoards = (boards) => ({
   boards
 });
 
-export const fetchTime = (startMoment, endMoment) => (dispatch, getState) => {
+export const fetchTimeTrackStats = (startMoment, endMoment) => (dispatch, getState) => {
+  dispatch(requestTimeTrackStats());
+
   const startDate = new Date(startMoment);
   const endDate = new Date(endMoment.endOf('day'));
   const { selectedUsers, selectedBoards } = getState();
@@ -34,12 +45,8 @@ export const fetchTime = (startMoment, endMoment) => (dispatch, getState) => {
   const boardIds = _.pluck(selectedBoards, 'value');
   const options = { startDate, endDate, userIds, boardIds };
 
-  return Promise.all([
-    getUserTimeByDay.callPromise(options),
-    getUserBoardsTime.callPromise(options)
-  ]).then((result) => {
-    dispatch(receiveTimeByDay(result[0]));
-    dispatch(receiveTimeByBoard(result[1]));
+  return getUserTimeTrackStats.callPromise(options).then((result) => {
+    dispatch(receiveTimeTrackStats(result));
   });
 };
 

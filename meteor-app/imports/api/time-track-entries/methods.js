@@ -45,8 +45,8 @@ export const update = PromisifiedMethod({
   }
 });
 
-export const getUserCardsTime = PromisifiedMethod({
-  name: 'TimeTrackEntries.getUserCardsTime',
+export const getUserTimeByCard = PromisifiedMethod({
+  name: 'TimeTrackEntries.getUserTimeByCard',
   
   validate: UserIdSchema.validator(),
   
@@ -61,12 +61,12 @@ export const getUserCardsTime = PromisifiedMethod({
       return;
     }
 
-    return TimeTrackService.timeOnCards(userId);
+    return TimeTrackService.timeByCard(userId);
   }
 });
 
-export const getUserBoardsTime = PromisifiedMethod({
-  name: 'TimeTrackEntries.getUserBoardsTime',
+export const getUserTimeByBoard = PromisifiedMethod({
+  name: 'TimeTrackEntries.getUserTimeByBoard',
 
   validate: new SimpleSchema(
     {
@@ -87,7 +87,7 @@ export const getUserBoardsTime = PromisifiedMethod({
       return;
     }
 
-    return TimeTrackService.timeOnBoards(startDate, endDate, userIds, boardIds);
+    return TimeTrackService.timeByBoard(startDate, endDate, userIds, boardIds);
   }
 });
 
@@ -113,6 +113,35 @@ export const getUserTimeByDay = PromisifiedMethod({
       return;
     }
 
-    return TimeTrackService.betweenDates(startDate, endDate, userIds, boardIds);
+    return TimeTrackService.timeByDay(startDate, endDate, userIds, boardIds);
+  }
+});
+
+export const getUserTimeTrackStats = PromisifiedMethod({
+  name: 'TimeTrackEntries.getUserTimeTrackStats',
+
+  validate: new SimpleSchema(
+    {
+      startDate: { type: Date },
+      endDate: { type: Date },
+      userIds: { type: [idSchemaDoc] },
+      boardIds: { type: [idSchemaDoc] }
+    }).validator(),
+
+  run({ startDate, endDate, userIds, boardIds }) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        403, 'Unauthorized user'
+      );
+    }
+
+    if (this.isSimulation) {
+      return;
+    }
+
+    return {
+      timeByBoard: TimeTrackService.timeByBoard(startDate, endDate, userIds, boardIds),
+      timeByDay: TimeTrackService.timeByDay(startDate, endDate, userIds, boardIds)
+    }
   }
 });
