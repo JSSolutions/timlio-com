@@ -32,13 +32,14 @@ export const randomColor = () => {
 };
 
 export const toGregorianCalendar = (value) => {
+  const hoursOffset = 11;
   const calendar = new GregorianCalendar(enUS);
-  calendar.setTime(moment(value).add(1, 'days'));
+  calendar.setTime(moment(value).add(hoursOffset, 'hours'));
 
   return calendar;
 };
 
 export const getInterval = (query) => ({
   startDate: query['date'] ? moment(query['date']) : moment().startOf('isoWeek'),
-  endDate: query['end_date'] ? moment(query['end_date']) : moment().endOf('isoWeek').subtract(1, 'days')
+  endDate: query['end_date'] ? moment(query['end_date']) : moment().endOf('isoWeek')
 });

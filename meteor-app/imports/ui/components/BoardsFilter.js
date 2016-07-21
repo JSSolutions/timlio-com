@@ -13,7 +13,7 @@ class BoardsFilter extends Component {
   }
   componentWillReceiveProps({ selectedBoards }) {
     if (this.props.selectedBoards !== selectedBoards) {
-      this.props.fetchTimeByDay();
+      this.props.fetchTime();
     }
   }
   onChange(selectedBoards) {
@@ -37,17 +37,18 @@ class BoardsFilter extends Component {
   }
 }
 
-const mapStateToProps = ({ selectedBoards }, { boards, fetchTimeByDay }) => ({
+const mapStateToProps = ({ selectedBoards }, { boards, fetchTime }) => ({
   boards,
   selectedBoards,
-  fetchTimeByDay
+  fetchTime
 });
 
-export default createContainer(({ fetchTimeByDay }) => {
-  const boardsHandle = Meteor.subscribe('boards');
+const MeteorContainer = createContainer(() => {
+  const boardsHandle = Meteor.subscribe('accessedBoards');
   const boardsExists = boardsHandle.ready();
   return {
-    boards: boardsExists ? Boards.find().fetch() : [],
-    fetchTimeByDay
+    boards: boardsExists ? Boards.find().fetch() : []
   }
-}, connect(mapStateToProps)(BoardsFilter));
+}, BoardsFilter);
+
+export default connect(mapStateToProps)(MeteorContainer);

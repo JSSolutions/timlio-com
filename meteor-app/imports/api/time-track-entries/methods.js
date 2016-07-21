@@ -1,14 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { PromisifiedMethod } from '../helpers';
 import TimeTrackService from './time-track-entries-service';
 import { CardIdSchema, IdSchema, BoardIdSchema, ListIdSchema, NameSchema, UserIdSchema, idSchemaDoc } from '../schemas';
 import ListsService from '../lists/lists-service';
 import BoardsService from '../boards/boards-service';
 import CardsService from '../cards/cards-service';
 
-
-export const insert = new ValidatedMethod({
+export const insert = PromisifiedMethod({
   name: 'TimeTrackEntries.insert',
 
   validate: new SimpleSchema([CardIdSchema, BoardIdSchema, ListIdSchema, NameSchema]).validator(),
@@ -30,7 +29,7 @@ export const insert = new ValidatedMethod({
   }
 });
 
-export const update = new ValidatedMethod({
+export const update = PromisifiedMethod({
   name: 'TimeTrackEntries.update',
 
   validate: IdSchema.validator(),
@@ -46,8 +45,8 @@ export const update = new ValidatedMethod({
   }
 });
 
-export const getUserCardsTime = new ValidatedMethod({
-  name: 'TimeTrackEntries.getUserCardsTime',
+export const getUserTimeByCard = PromisifiedMethod({
+  name: 'TimeTrackEntries.getUserTimeByCard',
   
   validate: UserIdSchema.validator(),
   
@@ -62,16 +61,22 @@ export const getUserCardsTime = new ValidatedMethod({
       return;
     }
 
-    return TimeTrackService.timeOnCards(userId);
+    return TimeTrackService.timeByCard(userId);
   }
 });
 
-export const getUserBoardsTime = new ValidatedMethod({
-  name: 'TimeTrackEntries.getUserBoardsTime',
+export const getUserTimeByBoard = PromisifiedMethod({
+  name: 'TimeTrackEntries.getUserTimeByBoard',
 
-  validate: UserIdSchema.validator(),
+  validate: new SimpleSchema(
+    {
+      startDate: { type: Date },
+      endDate: { type: Date },
+      userIds: { type: [idSchemaDoc] },
+      boardIds: { type: [idSchemaDoc] }
+    }).validator(),
 
-  run({ userId }) {
+  run({ startDate, endDate, userIds, boardIds }) {
     if (!this.userId) {
       throw new Meteor.Error(
         403, 'Unauthorized user'
@@ -82,11 +87,11 @@ export const getUserBoardsTime = new ValidatedMethod({
       return;
     }
 
-    return TimeTrackService.timeOnBoards(userId);
+    return TimeTrackService.timeByBoard(startDate, endDate, userIds, boardIds);
   }
 });
 
-export const getUserTimeByDay = new ValidatedMethod({
+export const getUserTimeByDay = PromisifiedMethod({
   name: 'TimeTrackEntries.getUserTimeByDay',
 
   validate: new SimpleSchema(
@@ -108,6 +113,35 @@ export const getUserTimeByDay = new ValidatedMethod({
       return;
     }
 
-    return TimeTrackService.betweenDates(startDate, endDate, userIds, boardIds);
+    return TimeTrackService.timeByDay(startDate, endDate, userIds, boardIds);
+  }
+});
+
+export const getUserTimeTrackStats = PromisifiedMethod({
+  name: 'TimeTrackEntries.getUserTimeTrackStats',
+
+  validate: new SimpleSchema(
+    {
+      startDate: { type: Date },
+      endDate: { type: Date },
+      userIds: { type: [idSchemaDoc] },
+      boardIds: { type: [idSchemaDoc] }
+    }).validator(),
+
+  run({ startDate, endDate, userIds, boardIds }) {
+    if (!this.userId) {
+      throw new Meteor.Error(
+        403, 'Unauthorized user'
+      );
+    }
+
+    if (this.isSimulation) {
+      return;
+    }
+
+    return {
+      timeByBoard: TimeTrackService.timeByBoard(startDate, endDate, userIds, boardIds),
+      timeByDay: TimeTrackService.timeByDay(startDate, endDate, userIds, boardIds)
+    }
   }
 });

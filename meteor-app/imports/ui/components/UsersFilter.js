@@ -12,7 +12,7 @@ class UsersFilter extends Component {
   }
   componentWillReceiveProps({ selectedUsers }) {
     if (this.props.selectedUsers !== selectedUsers) {
-      this.props.fetchTimeByDay();
+      this.props.fetchTime();
     }
   }
   onChange(selectedUsers) {
@@ -20,7 +20,9 @@ class UsersFilter extends Component {
   }
   render() {
     const { users, selectedUsers } = this.props;
-    const options = users.map((user) => ({
+    const options = users.filter((user) => 
+      !!user.profile
+    ).map((user) => ({
       value: user._id,
       label: user.profile.name
     }));
@@ -36,17 +38,19 @@ class UsersFilter extends Component {
   }
 }
 
-const mapStateToProps = ({ selectedUsers }, { users, fetchTimeByDay }) => ({
-  fetchTimeByDay,
+const mapStateToProps = ({ selectedUsers }, { users, fetchTime }) => ({
+  fetchTime,
   users,
   selectedUsers
 });
 
-export default createContainer(({ fetchTimeByDay }) => {
-  const usersHandle = Meteor.subscribe('users');
+const MeteorContainer = createContainer(() => {
+  const usersHandle = Meteor.subscribe('accessedUsers');
   const userExists = usersHandle.ready();
+
   return {
-    users: userExists ? Meteor.users.find().fetch() : [],
-    fetchTimeByDay
+    users: userExists ? Meteor.users.find().fetch() : []
   }
-}, connect(mapStateToProps)(UsersFilter));
+}, UsersFilter);
+
+export default connect(mapStateToProps)(MeteorContainer);

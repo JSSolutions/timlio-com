@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import DatePicker from 'rc-calendar/lib/Picker';
 import DateTimeFormat from 'gregorian-calendar-format';
-import CalendarLocale from 'rc-calendar/lib/locale/en_US';
 
 const formatter = new DateTimeFormat('E, MMM d yyyy');
 
@@ -21,7 +20,6 @@ class Interval extends Component {
 
     const calendar = (<RangeCalendar
       showWeekNumber={false}
-      locale={CalendarLocale}
       formatter={formatter}
       showOk={false}
     />);
@@ -43,7 +41,9 @@ class Interval extends Component {
                   className="form-control"
                   value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}`}
                 />
-                <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"></i></div>
+                <div className="input-group-addon">
+                  <i className="fa fa-calendar" aria-hidden="true"></i>
+                </div>
               </div>
             </div>
           </div>);

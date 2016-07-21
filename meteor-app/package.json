@@ -5,10 +5,15 @@
     "start": "meteor run"
   },
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "chart.js": "^1.1.1",
+    "classnames": "^2.2.5",
     "gregorian-calendar": "latest",
     "gregorian-calendar-format": "latest",
+    "indexof": "0.0.1",
     "meteor-node-stubs": "~0.2.0",
     "moment": "latest",
+    "randomcolor": "^0.4.4",
     "rc-calendar": "latest",
     "rc-time-picker": "^1.1.5",
     "react": "^15.0.2",

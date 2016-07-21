@@ -1,52 +1,51 @@
 import React, { Component } from 'react';
 import BarChart from './BarChart';
-import Calendar from './Calendar';
-import UsersFilter from './UsersFilter';
-import BoardsFilter from './BoardsFilter';
-import DateTimeFormat from 'gregorian-calendar-format';
-import { toGregorianCalendar } from '../helpers';
-import { withRouter } from 'react-router';
+import DoughnutChart from './DoughnutChart';
+import TimeSpendTable from './TimeSpendTable';
+import randomColor from 'randomcolor';
 
 class TimeTrackStats extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onDateChange = this.onDateChange.bind(this);
+  componentDidMount() {
+    this.props.fetchTime();
   }
-  onDateChange(value) {
-    const { router } = this.props;
-    const formatter = new DateTimeFormat('yyyy-MM-dd');
-    const query = {
-      'date': formatter.format(value[0]),
-      'end_date': formatter.format(value[1])
-    };
-    router.push({ query })
+  componentWillUpdate({ location, startDate, endDate }) {
+    if (this.props.location.query !== location.query) {
+      const { fetchTime } = this.props;
+      fetchTime(startDate, endDate);
+    }
   }
   render() {
-    const { timeByDay, startDate, endDate, fetchTimeByDay } = this.props;
-    
-    if (timeByDay) {
+    const { timeByDay, timeByBoard, startDate, endDate, isFetching } = this.props;
+
+    if (isFetching || (!timeByDay && !timeByBoard)) {
+      return <div>Loading...</div>;
+    }
+
+    if (timeByBoard.length && timeByDay.length) {
+      const timeByBoardWithColor = timeByBoard.map((item) =>
+        Object.assign({}, item, { color: randomColor() })
+      );
+
       return (
         <div>
-          <Calendar
-            onChange={this.onDateChange}
-            value={[toGregorianCalendar(startDate), toGregorianCalendar(endDate)]}/>
-          <div className="row margin-bottom">
-            <UsersFilter fetchTimeByDay={fetchTimeByDay}/>
-            <BoardsFilter fetchTimeByDay={fetchTimeByDay}/>
-          </div>
           <BarChart
             timeByDay={timeByDay}
             startDate={startDate}
             endDate={endDate}/>
+          <div className="row">
+            <div className="col-sm-6">
+              <TimeSpendTable timeByBoard={timeByBoardWithColor}/>
+            </div>
+            <div className="col-sm-6">
+              <DoughnutChart timeByBoard={timeByBoardWithColor}/>
+            </div>
+          </div>
         </div>
       )
     } else {
-      return (
-        <div>Loading...</div>
-      )
+      return <div><h4 className="text-center text-muted">No activity</h4></div>;
     }
   }
 }
 
-export default withRouter(TimeTrackStats);
+export default TimeTrackStats;

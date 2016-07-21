@@ -1,4 +1,4 @@
-import { getUserBoardsTime, getUserTimeByDay } from '../../api/time-track-entries/methods';
+import { getUserTimeTrackStats } from '../../api/time-track-entries/methods';
 import * as ActionTypes from './actionTypes';
 
 export const receiveTimeByDay = (timeByDay) => ({
@@ -16,6 +16,15 @@ export const receiveTimeByCard = (timeByCard) => ({
   timeByCard
 });
 
+export const receiveTimeTrackStats = (timeTrackStats) => ({
+  type: ActionTypes.RECEIVE_TIME_TRACK_STATS,
+  timeTrackStats
+});
+
+export const requestTimeTrackStats = () => ({
+  type: ActionTypes.REQUEST_TIME_TRACK_STATS
+});
+
 export const setUsers = (users) => ({
   type: ActionTypes.SET_USERS,
   users
@@ -26,27 +35,21 @@ export const setBoards = (boards) => ({
   boards
 });
 
-export const fetchTimeByDay = (startDate, endDate) => (dispatch, getState) => {
-  startDate = new Date(startDate);
-  endDate = new Date(endDate);
+export const fetchTimeTrackStats = (startMoment, endMoment) => (dispatch, getState) => {
+  dispatch(requestTimeTrackStats());
+
+  const startDate = new Date(startMoment);
+  const endDate = new Date(endMoment.endOf('day'));
   const { selectedUsers, selectedBoards } = getState();
   const userIds = _.pluck(selectedUsers, 'value');
   const boardIds = _.pluck(selectedBoards, 'value');
-  getUserTimeByDay.call({ startDate, endDate, userIds, boardIds }, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
+  const options = { startDate, endDate, userIds, boardIds };
 
-    dispatch(receiveTimeByDay(result));
+  return getUserTimeTrackStats.callPromise(options).then((result) => {
+    dispatch(receiveTimeTrackStats(result));
   });
 };
 
-export const fetchTimeByBoard = (userId) => (dispatch) => {
-  getUserBoardsTime.call({ userId: Meteor.userId() }, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-    
-    dispatch(receiveTimeByBoard(result));
-  });
-};
+
+
+
