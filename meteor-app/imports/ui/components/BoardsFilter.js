@@ -28,6 +28,7 @@ class BoardsFilter extends Component {
 
     return (
       <Filter
+        multi={true}
         placeholder="All Boards"
         value={selectedBoards}
         onChange={this.onChange}

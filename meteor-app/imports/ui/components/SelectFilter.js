@@ -8,7 +8,7 @@ export default class SelectFilter extends Component {
       <div className="col-sm-4 margin-bottom">
         <label>{this.props.label}</label>
         <Select
-          multi
+          multi={this.props.multi}
           placeholder={this.props.placeholder}
           value={this.props.value || []}
           options={this.props.options}
