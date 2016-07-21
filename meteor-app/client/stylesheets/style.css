@@ -7,3 +7,6 @@
 .filters {
   margin-bottom: 20px;
 }
+.table th .fa {
+  margin-top: 4px;
+}

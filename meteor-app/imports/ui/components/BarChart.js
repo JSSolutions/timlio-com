@@ -97,9 +97,11 @@ export default class BarChart extends Component {
     };
 
     return (
-      <div className="row margin-bottom" style={{height: 375}}>
-        <Bar data={chartData} options={chartOptions} redraw/>
-        <div id="bar-tooltip" style={tooltipStyle}></div>
+      <div className="row margin-bottom">
+        <div className="col-sm-12" style={{height: 375}}>
+          <Bar data={chartData} options={chartOptions} redraw/>
+          <div id="bar-tooltip" style={tooltipStyle}></div>
+        </div>
       </div>
     )
   }

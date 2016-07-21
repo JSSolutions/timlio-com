@@ -1,7 +1,7 @@
 import * as ActionTypes from './actionTypes';
 import { combineReducers } from 'redux';
 
-const timeTrackStats = (state = { isFetching: false }, action) => {
+const timeTrackStats = (state = {}, action) => {
   switch (action.type) {
     case ActionTypes.RECEIVE_TIME_BY_DAY:
       return Object.assign({}, state, { timeByDay: action.timeByDay });
@@ -10,8 +10,8 @@ const timeTrackStats = (state = { isFetching: false }, action) => {
     case ActionTypes.REQUEST_TIME_TRACK_STATS:
       return Object.assign({}, state, { isFetching: true });
     case ActionTypes.RECEIVE_TIME_TRACK_STATS:
-      const { timeByDay, timeByBoard } = action.timeTrackStats;
-      return Object.assign({}, state, { timeByDay, timeByBoard, isFetching: false });
+      const { timeTrackStats } = action;
+      return Object.assign({}, state, timeTrackStats, { isFetching: false });
     default:
       return state;
   }

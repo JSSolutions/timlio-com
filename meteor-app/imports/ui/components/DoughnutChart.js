@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Doughnut } from 'react-chartjs';
 import { millisecondsToTime } from '../helpers';
-import { randomColor } from '../helpers';
 
 export default class DoughnutChart extends Component {
   shouldComponentUpdate(nextProps) {
@@ -11,7 +10,7 @@ export default class DoughnutChart extends Component {
     const chartData = this.props.timeByBoard.map((item) => {
       return {
         value: item.time,
-        color: randomColor(),
+        color: item.color,
         label: item.name
       }
     });

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import BarChart from './BarChart';
 import DoughnutChart from './DoughnutChart';
 import TimeSpendTable from './TimeSpendTable';
+import randomColor from 'randomcolor';
 
 class TimeTrackStats extends Component {
   componentDidMount() {
@@ -21,6 +22,10 @@ class TimeTrackStats extends Component {
     }
 
     if (timeByBoard.length && timeByDay.length) {
+      const timeByBoardWithColor = timeByBoard.map((item) =>
+        Object.assign({}, item, { color: randomColor() })
+      );
+
       return (
         <div>
           <BarChart
@@ -29,10 +34,10 @@ class TimeTrackStats extends Component {
             endDate={endDate}/>
           <div className="row">
             <div className="col-sm-6">
-              <TimeSpendTable timeByBoard={timeByBoard}/>
+              <TimeSpendTable timeByBoard={timeByBoardWithColor}/>
             </div>
             <div className="col-sm-6">
-              <DoughnutChart timeByBoard={timeByBoard}/>
+              <DoughnutChart timeByBoard={timeByBoardWithColor}/>
             </div>
           </div>
         </div>
