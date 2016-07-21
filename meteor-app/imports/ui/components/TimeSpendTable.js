@@ -58,11 +58,11 @@ export default class TimeSpendTable extends Component {
 
     const { timeByBoard } = this.props;
 
-    const row = ['name', '', 'time'];
+    const rowKeys = ['name', '', 'time'];
 
     const { column, asc } = this.state;
 
-    let sortedTimeData = _.sortBy(timeByBoard, row[column]);
+    let sortedTimeData = _.sortBy(timeByBoard, rowKeys[column]);
     sortedTimeData = asc ? sortedTimeData : sortedTimeData.reverse();
 
     return (
