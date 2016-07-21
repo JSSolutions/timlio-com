@@ -29,6 +29,7 @@ class UsersFilter extends Component {
 
     return (
       <Filter
+        multi={true}
         placeholder="All Users"
         value={selectedUsers}
         onChange={this.onChange} 
